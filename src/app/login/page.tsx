@@ -129,27 +129,27 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto px-4 py-8 sm:py-12 space-y-6">
+    <div className="max-w-md mx-auto px-3 sm:px-4 py-4 sm:py-12 space-y-4 sm:space-y-6">
       <div className="bg-white/95 backdrop-blur-md rounded-3xl border border-emerald-100 shadow-xl overflow-hidden transition-all">
         {/* Top Government Saffron/Green Tricolor Accent Strip */}
         <div className="h-2 w-full bg-gradient-to-r from-amber-500 via-white to-emerald-600" />
 
-        <div className="p-6 sm:p-8 space-y-6">
+        <div className="p-4 sm:p-8 space-y-5 sm:space-y-6">
           {/* Official Emblem & Portal Title */}
-          <div className="text-center space-y-2">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-700 to-teal-600 text-white shadow-md mx-auto text-2xl font-black">
+          <div className="text-center space-y-1.5 sm:space-y-2">
+            <div className="inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-emerald-700 to-teal-600 text-white shadow-md mx-auto text-xl sm:text-2xl font-black">
               🌾
             </div>
             <div>
-              <p className="text-[11px] font-extrabold uppercase tracking-widest text-emerald-800">
+              <p className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-widest text-emerald-800">
                 {locale === "hi"
                   ? "उत्तर प्रदेश शासन • पंचायती राज व कृषि विभाग"
                   : "Govt of Uttar Pradesh • Panchayati Raj & Agriculture"}
               </p>
-              <h1 className="text-2xl font-black text-slate-900 tracking-tight mt-0.5">
+              <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mt-0.5">
                 {t("app_name")}
               </h1>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5">
                 {locale === "hi"
                   ? "सुरक्षित एकीकृत ग्राम सेवा पोर्टल"
                   : "Secure Integrated Village Governance Portal"}
@@ -165,14 +165,14 @@ export default function LoginPage() {
                 setSelectedRole("farmer");
                 setErrorMessage(null);
               }}
-              className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all min-h-[44px] ${
+              className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all min-h-[42px] sm:min-h-[44px] ${
                 selectedRole === "farmer"
                   ? "bg-white text-emerald-800 shadow-md scale-[1.01]"
                   : "text-slate-600 hover:text-slate-900"
               }`}
             >
-              <User className="w-4 h-4 text-emerald-600" />
-              <span>{locale === "hi" ? "किसान बंधु (Farmer)" : "Farmer Portal"}</span>
+              <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-600 shrink-0" />
+              <span className="whitespace-nowrap">{locale === "hi" ? "किसान (Farmer)" : "Farmer Portal"}</span>
             </button>
 
             <button
@@ -181,14 +181,14 @@ export default function LoginPage() {
                 setSelectedRole("officer");
                 setErrorMessage(null);
               }}
-              className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all min-h-[44px] ${
+              className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all min-h-[42px] sm:min-h-[44px] ${
                 selectedRole === "officer"
                   ? "bg-white text-amber-900 shadow-md scale-[1.01]"
                   : "text-slate-600 hover:text-slate-900"
               }`}
             >
-              <Shield className="w-4 h-4 text-amber-600" />
-              <span>{locale === "hi" ? "अधिकारी वर्ग (Officer)" : "Officer Command"}</span>
+              <Shield className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-600 shrink-0" />
+              <span className="whitespace-nowrap">{locale === "hi" ? "अधिकारी (Officer)" : "Officer Command"}</span>
             </button>
           </div>
 

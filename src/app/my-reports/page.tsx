@@ -76,17 +76,17 @@ export default function MyReportsPage() {
   }, []);
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-6 sm:pt-8 space-y-6">
+    <div className="max-w-4xl mx-auto px-3 sm:px-6 pt-4 sm:pt-8 space-y-5 sm:space-y-6">
       {/* Page Header */}
       <div className="space-y-1">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">
           <FileText className="w-3.5 h-3.5 text-emerald-600" />
           <span>{locale === "hi" ? "इतिहास व रिकॉर्ड" : "History & Records"}</span>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+        <h1 className="text-xl sm:text-3xl font-black text-slate-900 tracking-tight">
           {t("nav.my_reports")}
         </h1>
-        <p className="text-sm text-slate-600">
+        <p className="text-xs sm:text-sm text-slate-600">
           {locale === "hi"
             ? "आपके द्वारा अब तक की गई सभी फसलों की जाँच और सरकारी योजना आवेदनों की स्थिति।"
             : "Review your past crop health checks and welfare scheme applications status."}
@@ -94,29 +94,29 @@ export default function MyReportsPage() {
       </div>
 
       {/* Tab Switcher */}
-      <div className="flex items-center gap-2 p-1 bg-slate-100 rounded-2xl border border-slate-200 w-fit">
+      <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-2xl border border-slate-200 w-full sm:w-fit overflow-x-auto no-scrollbar">
         <button
           type="button"
           onClick={() => setActiveTab("diagnoses")}
-          className={`px-4 py-2 rounded-xl text-xs font-black transition-all ${
+          className={`flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-xl text-xs font-black transition-all whitespace-nowrap text-center ${
             activeTab === "diagnoses"
               ? "bg-white text-emerald-900 shadow-sm"
               : "text-slate-600 hover:text-slate-900"
           }`}
         >
-          {locale === "hi" ? `🌱 फसल रोग जांच (${reports.length})` : `🌱 Crop Diagnoses (${reports.length})`}
+          {locale === "hi" ? `🌱 फसल रोग (${reports.length})` : `🌱 Crop Diagnoses (${reports.length})`}
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab("schemes")}
-          className={`px-4 py-2 rounded-xl text-xs font-black transition-all ${
+          className={`flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-xl text-xs font-black transition-all whitespace-nowrap text-center ${
             activeTab === "schemes"
               ? "bg-emerald-700 text-white shadow-sm"
               : "text-slate-600 hover:text-slate-900"
           }`}
         >
-          {locale === "hi" ? `📜 योजना आवेदन (${schemeApps.length})` : `📜 Scheme Applications (${schemeApps.length})`}
+          {locale === "hi" ? `📜 योजनाएं (${schemeApps.length})` : `📜 Scheme Apps (${schemeApps.length})`}
         </button>
       </div>
 

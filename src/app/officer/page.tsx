@@ -296,7 +296,7 @@ export default function OfficerDashboardPage() {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2 shrink-0">
+                    <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 shrink-0">
                       <span
                         className={`text-xs font-extrabold px-3 py-1 rounded-full border ${
                           isPending

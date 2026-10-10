@@ -119,7 +119,7 @@ export default function Navbar() {
 
             {/* User Session Profile Chip or Login Button */}
             {currentUser ? (
-              <div className="flex items-center gap-1.5 sm:gap-2 bg-slate-50 border border-slate-200/90 rounded-2xl p-1 sm:p-1.5 shadow-xs shrink-0">
+              <div className="flex items-center gap-1 sm:gap-2 bg-slate-50 border border-slate-200/90 rounded-2xl p-1 sm:p-1.5 shadow-xs shrink-0">
                 {/* User Avatar & Name */}
                 <div className="flex items-center gap-1.5 sm:gap-2 px-1 py-0.5 shrink-0">
                   <div
@@ -133,12 +133,12 @@ export default function Navbar() {
                   </div>
                   
                   {/* Full Name & Role - Always rendered cleanly */}
-                  <div className="flex flex-col text-left shrink-0">
-                    <span className="font-extrabold text-xs text-slate-900 leading-tight whitespace-nowrap">
+                  <div className="flex flex-col text-left shrink-0 max-w-[75px] xs:max-w-[100px] sm:max-w-none">
+                    <span className="font-extrabold text-[11px] sm:text-xs text-slate-900 leading-tight truncate sm:whitespace-nowrap">
                       {currentUser.full_name}
                     </span>
                     <span
-                      className={`text-[10px] font-black uppercase tracking-wider block whitespace-nowrap ${
+                      className={`text-[9px] sm:text-[10px] font-black uppercase tracking-wider block whitespace-nowrap leading-none mt-0.5 ${
                         currentUser.role === "officer"
                           ? "text-amber-700"
                           : "text-emerald-700"
@@ -152,13 +152,13 @@ export default function Navbar() {
                 </div>
 
                 {/* Subtle Divider */}
-                <div className="h-5 w-px bg-slate-200 block shrink-0" />
+                <div className="h-4 sm:h-5 w-px bg-slate-200 block shrink-0" />
 
                 {/* Distinct Logout Button */}
                 <button
                   type="button"
                   onClick={handleLogout}
-                  className="inline-flex items-center gap-1 p-1.5 sm:px-2 sm:py-1 rounded-xl text-xs font-bold text-rose-700 hover:bg-rose-100/80 active:scale-95 transition-all shrink-0"
+                  className="inline-flex items-center gap-1 p-1 sm:px-2 sm:py-1 rounded-xl text-xs font-bold text-rose-700 hover:bg-rose-100/80 active:scale-95 transition-all shrink-0"
                   title={locale === "hi" ? "लॉग आउट करें" : "Log Out"}
                   aria-label="Log Out"
                 >
@@ -172,7 +172,7 @@ export default function Navbar() {
               <Link
                 href="/login"
                 prefetch={true}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-black bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm transition-all active:scale-95 shrink-0 whitespace-nowrap min-w-fit"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-black bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm transition-all active:scale-95 shrink-0 whitespace-nowrap min-w-fit"
               >
                 <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
                 <span className="whitespace-nowrap">
@@ -188,7 +188,7 @@ export default function Navbar() {
       {!isAuthPage && currentUser && (
         <nav
           aria-label="Mobile Navigation"
-          className="xl:hidden fixed bottom-3 left-3 right-3 z-40 bg-white/95 backdrop-blur-xl border border-emerald-200/80 shadow-2xl rounded-2xl py-1 px-1.5 flex items-center justify-around"
+          className="xl:hidden fixed bottom-2 sm:bottom-3 left-2 sm:left-3 right-2 sm:right-3 z-40 bg-white/95 backdrop-blur-xl border border-emerald-200/80 shadow-2xl rounded-2xl py-1 px-1 sm:px-2 flex items-center justify-around overflow-x-auto no-scrollbar scroll-smooth"
         >
           {navLinks.map((item) => {
             const Icon = item.icon;
@@ -198,7 +198,7 @@ export default function Navbar() {
                 key={item.href}
                 href={item.href}
                 prefetch={true}
-                className={`flex flex-col items-center justify-center py-1 px-1.5 rounded-xl min-h-[44px] min-w-[46px] transition-all ${
+                className={`flex flex-col items-center justify-center py-1 px-1 rounded-xl min-h-[44px] min-w-[42px] xs:min-w-[46px] transition-all shrink-0 ${
                   isActive
                     ? "text-emerald-800 font-black scale-105"
                     : "text-slate-500 font-semibold hover:text-emerald-700"
@@ -209,9 +209,9 @@ export default function Navbar() {
                     isActive ? "bg-emerald-100 text-emerald-800" : ""
                   }`}
                 >
-                  <Icon className="w-4 h-4" />
+                  <Icon className="w-4 h-4 shrink-0" />
                 </div>
-                <span className="text-[9px] mt-0.5 tracking-tight text-center truncate max-w-[56px]">
+                <span className="text-[9px] mt-0.5 tracking-tight text-center truncate max-w-[50px] xs:max-w-[56px] leading-tight">
                   {item.label}
                 </span>
               </Link>

@@ -31,7 +31,87 @@ export default function MandiTable({
 
   return (
     <div className="w-full bg-white/95 backdrop-blur-md rounded-3xl border border-emerald-100 shadow-lg overflow-hidden">
-      <div className="overflow-x-auto">
+      {/* Mobile Card View (Screens < 768px) */}
+      <div className="md:hidden divide-y divide-slate-100 p-2 space-y-2">
+        {sorted.map((item, idx) => {
+          const isBest = item.modal_price === highestPrice;
+          const isSelected = selectedMandi?.market === item.market;
+
+          return (
+            <div
+              key={idx}
+              onClick={() => onSelectMandi && onSelectMandi(item)}
+              className={`p-3.5 rounded-2xl border transition-all cursor-pointer ${
+                isSelected
+                  ? "bg-amber-50/90 border-amber-300 shadow-sm"
+                  : isBest
+                  ? "bg-emerald-50/40 border-emerald-200"
+                  : "bg-white border-slate-100 hover:bg-slate-50"
+              }`}
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="font-black text-slate-900 text-base">
+                      {item.market}
+                    </span>
+                    {isBest && (
+                      <span className="inline-flex items-center gap-1 text-[10px] font-black bg-amber-500 text-slate-950 px-2 py-0.5 rounded-full shadow-xs shrink-0">
+                        <Award className="w-3 h-3" />
+                        {t("mandi.best_price")}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2 text-xs text-slate-500 mt-1 flex-wrap">
+                    <span className="flex items-center gap-1">
+                      <MapPin className="w-3 h-3 text-slate-400" />
+                      {item.district}
+                    </span>
+                    <span>•</span>
+                    <span className="flex items-center gap-1">
+                      <Calendar className="w-3 h-3 text-slate-400" />
+                      {item.arrival_date}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="text-right shrink-0">
+                  <div className="text-lg font-black text-emerald-700 leading-none">
+                    ₹{item.modal_price}
+                  </div>
+                  <span className="text-[10px] text-slate-500 font-bold block mt-0.5">/क्विंटल</span>
+                </div>
+              </div>
+
+              <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs">
+                <div className="flex items-center gap-2 text-slate-600 font-medium text-[11px]">
+                  <span>न्यूनतम: ₹{item.min_price}</span>
+                  <span>|</span>
+                  <span>अधिकतम: ₹{item.max_price}</span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelectMandi && onSelectMandi(item);
+                  }}
+                  className={`px-3 py-1 rounded-xl text-xs font-bold transition-all ${
+                    isSelected
+                      ? "bg-amber-600 text-white shadow-xs"
+                      : "bg-slate-100 text-slate-700 hover:bg-emerald-600 hover:text-white"
+                  }`}
+                >
+                  {isSelected ? "✓ चुना गया" : "कैलकुलेट करें"}
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Desktop Table View (Screens >= 768px) */}
+      <div className="hidden md:block overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-emerald-50/70 border-b border-emerald-100 text-slate-700 text-xs sm:text-sm font-bold uppercase tracking-wider">

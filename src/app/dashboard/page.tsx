@@ -97,10 +97,10 @@ export default function DashboardPage() {
   }, [router]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 pb-20 sm:pb-12 space-y-6 sm:space-y-8">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-3 sm:pt-6 pb-24 sm:pb-12 space-y-5 sm:space-y-8">
       
       {/* 1. Awesome Kisan Background Hero Banner */}
-      <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-emerald-900/10 min-h-[300px] sm:min-h-[360px] flex flex-col justify-end p-6 sm:p-10 text-white">
+      <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-emerald-900/10 min-h-[280px] sm:min-h-[360px] flex flex-col justify-end p-4 sm:p-10 text-white">
         {/* Background Photograph of Indian Kisans */}
         <div className="absolute inset-0 z-0">
           <Image
@@ -116,33 +116,33 @@ export default function DashboardPage() {
         </div>
 
         {/* Hero Content Overlay */}
-        <div className="relative z-10 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+        <div className="relative z-10 flex flex-col lg:flex-row lg:items-end justify-between gap-4 sm:gap-6">
           <div className="space-y-2 max-w-2xl">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-xs uppercase tracking-wider font-black bg-amber-500 text-slate-950 px-3 py-1 rounded-full shadow-md">
+            <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+              <span className="text-[10px] sm:text-xs uppercase tracking-wider font-black bg-amber-500 text-slate-950 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full shadow-md">
                 🌾 {locale === "hi" ? "उत्तर प्रदेश पंचायती राज" : "UP Panchayati Raj"}
               </span>
-              <span className="text-xs font-bold bg-white/20 backdrop-blur-md text-emerald-100 px-3 py-1 rounded-full border border-white/20">
+              <span className="text-[10px] sm:text-xs font-bold bg-white/20 backdrop-blur-md text-emerald-100 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full border border-white/20">
                 📍 {currentUser?.village || "मलिहाबाद"}, {currentUser?.district || "लखनऊ"} (UP)
               </span>
             </div>
 
-            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight text-white drop-shadow-md">
+            <h1 className="text-xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight text-white drop-shadow-md">
               {locale === "hi"
                 ? `नमस्ते, ${currentUser?.full_name || "किसान साथी"}!`
                 : `Welcome, ${currentUser?.full_name || "Farmer"}!`}
             </h1>
 
-            <p className="text-sm sm:text-base text-emerald-100 max-w-xl font-medium leading-relaxed drop-shadow">
+            <p className="text-xs sm:text-base text-emerald-100 max-w-xl font-medium leading-relaxed drop-shadow">
               {locale === "hi"
                 ? "आपकी रबी फसल की सुरक्षा के लिए एआई डॉक्टर, लाइव मंडी भाव और गाँव में बीमारी सतर्कता प्रणाली तैयार है।"
                 : "AI crop diagnostics, real-time APMC mandi prices, and neighborhood outbreak surveillance ready for your farm."}
             </p>
           </div>
 
-          {/* Real-time Weather & Micro-climate Widget (English Numerals: 26°C) */}
-          <div className="bg-white/15 backdrop-blur-xl rounded-2xl p-4 sm:p-5 border border-white/25 shadow-xl flex items-center gap-4 shrink-0 self-start lg:self-auto">
-            <div className="w-12 h-12 rounded-2xl bg-amber-400 text-slate-950 flex items-center justify-center font-bold shadow-md shrink-0">
+          {/* Real-time Weather & Micro-climate Widget */}
+          <div className="bg-white/15 backdrop-blur-xl rounded-2xl p-3.5 sm:p-5 border border-white/25 shadow-xl flex items-center gap-3 sm:gap-4 shrink-0 self-start lg:self-auto">
+            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-amber-400 text-slate-950 flex items-center justify-center font-bold shadow-md shrink-0">
               <CloudSun className="w-7 h-7" />
             </div>
             <div className="space-y-0.5 text-xs">

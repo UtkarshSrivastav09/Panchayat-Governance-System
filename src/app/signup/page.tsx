@@ -200,27 +200,27 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="max-w-xl mx-auto px-4 py-8 sm:py-12 space-y-6">
+    <div className="max-w-xl mx-auto px-3 sm:px-4 py-4 sm:py-12 space-y-4 sm:space-y-6">
       <div className="bg-white/95 backdrop-blur-md rounded-3xl border border-emerald-100 shadow-xl overflow-hidden transition-all">
         {/* Tricolor accent bar */}
         <div className="h-2 w-full bg-gradient-to-r from-amber-500 via-white to-emerald-600" />
 
-        <div className="p-6 sm:p-8 space-y-6">
+        <div className="p-4 sm:p-8 space-y-5 sm:space-y-6">
           {/* Header */}
-          <div className="text-center space-y-2">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-700 to-teal-600 text-white flex items-center justify-center mx-auto text-2xl font-black shadow-md">
+          <div className="text-center space-y-1.5 sm:space-y-2">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-emerald-700 to-teal-600 text-white flex items-center justify-center mx-auto text-xl sm:text-2xl font-black shadow-md">
               🌱
             </div>
             <div>
-              <p className="text-[11px] font-extrabold uppercase tracking-widest text-emerald-800">
+              <p className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-widest text-emerald-800">
                 {locale === "hi"
                   ? "उत्तर प्रदेश शासन • नवीन उपयोगकर्ता पंजीकरण"
                   : "Govt of Uttar Pradesh • New User Registration"}
               </p>
-              <h1 className="text-2xl font-black text-slate-900 tracking-tight mt-0.5">
+              <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mt-0.5">
                 {t("nav.signup")}
               </h1>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5">
                 {locale === "hi"
                   ? "कृपया अपनी सही जानकारी दर्ज करें ताकि संबंधित सरकारी सेवाएं मिल सकें"
                   : "Please provide accurate information for verified village governance"}
@@ -233,25 +233,25 @@ export default function SignupPage() {
             <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
               {locale === "hi" ? "खाता प्रकार चुनें (Select Role):" : "Select Account Role:"}
             </label>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-2 sm:gap-3">
               {/* Farmer Option Card */}
               <div
                 onClick={() => setRole("farmer")}
-                className={`cursor-pointer p-4 rounded-2xl border-2 transition-all flex flex-col items-center text-center gap-2 select-none ${
+                className={`cursor-pointer p-3 sm:p-4 rounded-2xl border-2 transition-all flex flex-col items-center text-center gap-1.5 sm:gap-2 select-none ${
                   role === "farmer"
                     ? "border-emerald-600 bg-emerald-50/70 shadow-sm"
                     : "border-slate-200 bg-white hover:bg-slate-50 opacity-70"
                 }`}
               >
-                <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-base sm:text-lg">
                   🌾
                 </div>
                 <div>
-                  <h3 className="font-extrabold text-sm text-slate-900">
+                  <h3 className="font-extrabold text-xs sm:text-sm text-slate-900">
                     {t("auth.farmer_role")}
                   </h3>
-                  <p className="text-[11px] text-slate-500 mt-0.5">
-                    {locale === "hi" ? "फसल जांच, बीमारी चेतावनी, मंडी" : "Crop health & mandi helper"}
+                  <p className="text-[10px] sm:text-[11px] text-slate-500 mt-0.5 leading-tight">
+                    {locale === "hi" ? "फसल जांच, मंडी भाव" : "Crop health & mandi"}
                   </p>
                 </div>
               </div>
@@ -259,21 +259,21 @@ export default function SignupPage() {
               {/* Officer Option Card */}
               <div
                 onClick={() => setRole("officer")}
-                className={`cursor-pointer p-4 rounded-2xl border-2 transition-all flex flex-col items-center text-center gap-2 select-none ${
+                className={`cursor-pointer p-3 sm:p-4 rounded-2xl border-2 transition-all flex flex-col items-center text-center gap-1.5 sm:gap-2 select-none ${
                   role === "officer"
                     ? "border-amber-600 bg-amber-50/70 shadow-sm"
                     : "border-slate-200 bg-white hover:bg-slate-50 opacity-70"
                 }`}
               >
-                <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-base sm:text-lg">
                   🛡️
                 </div>
                 <div>
-                  <h3 className="font-extrabold text-sm text-slate-900">
+                  <h3 className="font-extrabold text-xs sm:text-sm text-slate-900">
                     {t("auth.officer_role")}
                   </h3>
-                  <p className="text-[11px] text-slate-500 mt-0.5">
-                    {locale === "hi" ? "क्लस्टर सत्यापन, अधिकारी डैशबोर्ड" : "Verification & official alerts"}
+                  <p className="text-[10px] sm:text-[11px] text-slate-500 mt-0.5 leading-tight">
+                    {locale === "hi" ? "सत्यापन, डैशबोर्ड" : "Official alerts"}
                   </p>
                 </div>
               </div>
