@@ -166,16 +166,26 @@ export default function CropDoctorPage() {
 
           {/* Step 2: Voice or Text symptom note */}
           <div className="space-y-2">
-            <label className="block text-sm sm:text-base font-bold text-slate-800">
-              २. {locale === "hi" ? "लक्षण बोलकर या लिखकर बताएं (वैकल्पिक):" : "Describe symptoms with voice/text (optional):"}
-            </label>
+            <div className="flex items-center justify-between">
+              <label className="block text-sm sm:text-base font-bold text-slate-800">
+                २. {locale === "hi" ? "लक्षण बोलकर या लिखकर बताएं:" : "Describe symptoms:"}
+              </label>
+              <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
+                {locale === "hi" ? "पूर्णतः वैकल्पिक (Optional)" : "100% Optional"}
+              </span>
+            </div>
+            <p className="text-xs text-slate-500">
+              {locale === "hi"
+                ? "💡 इसे खाली भी छोड़ सकते हैं — एआई सीधे आपकी फोटो के लक्षणों को पहचान कर परिणाम दे देगा।"
+                : "💡 You can leave this blank — AI will diagnose the problem directly from the leaf photo."}
+            </p>
             <VoiceInput
               initialValue={userNote}
               onTranscript={setUserNote}
               placeholder={
                 locale === "hi"
-                  ? "बोलने के लिए माइक दबाएं (जैसे: पत्तों पर पीले धब्बे हैं)..."
-                  : "Tap mic to speak (e.g. yellow rust spots on wheat leaves)..."
+                  ? "वैकल्पिक: माइक दबाकर लक्षण बोलें या सीधे नीचे बटन दबाएं..."
+                  : "Optional: Speak symptoms or submit directly below..."
               }
             />
           </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DiagnosisResult } from "@/lib/validators";
 import { useI18n } from "@/lib/i18n";
 import {
@@ -15,6 +15,7 @@ import {
   CheckCircle2,
   AlertCircle,
   Stethoscope,
+  Languages,
 } from "lucide-react";
 
 interface DiagnosisCardProps {
@@ -22,22 +23,69 @@ interface DiagnosisCardProps {
 }
 
 export default function DiagnosisCard({ diagnosis }: DiagnosisCardProps) {
-  const { t, locale } = useI18n();
+  const { t, locale, setLocale } = useI18n();
+  // Language switcher state, initialized to current locale
+  const [activeLang, setActiveLang] = useState<"hi" | "en">(locale);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  // Preload voices on mount for Chrome/Edge
-  useState(() => {
+  // Sync with global locale if user changes navbar toggle
+  useEffect(() => {
+    setActiveLang(locale);
+  }, [locale]);
+
+  // Preload speech synthesis voices
+  useEffect(() => {
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
       window.speechSynthesis.getVoices();
     }
-  });
+  }, []);
+
+  const isEn = activeLang === "en";
+
+  // Data mapping based on active language
+  const cropName = isEn
+    ? diagnosis.crop_name_en || diagnosis.crop_key?.toUpperCase() || "Wheat"
+    : diagnosis.crop_name_hi || diagnosis.crop_key || "गेहूं (Wheat)";
+
+  const diseasePrimary = isEn
+    ? diagnosis.disease_name_en || diagnosis.disease_name_hi || "Leaf Rust"
+    : diagnosis.disease_name_hi || diagnosis.disease_name_en || "पत्ती का रतुआ";
+
+  const diseaseSecondary = isEn
+    ? diagnosis.disease_name_hi
+    : diagnosis.disease_name_en;
+
+  const symptomsList =
+    isEn && diagnosis.symptoms_en && diagnosis.symptoms_en.length > 0
+      ? diagnosis.symptoms_en
+      : diagnosis.symptoms_hi;
+
+  const treatmentList =
+    isEn && diagnosis.treatment_en && diagnosis.treatment_en.length > 0
+      ? diagnosis.treatment_en
+      : diagnosis.treatment_hi;
+
+  const organicList =
+    isEn && diagnosis.organic_options_en && diagnosis.organic_options_en.length > 0
+      ? diagnosis.organic_options_en
+      : diagnosis.organic_options_hi;
+
+  const preventionList =
+    isEn && diagnosis.prevention_en && diagnosis.prevention_en.length > 0
+      ? diagnosis.prevention_en
+      : diagnosis.prevention_hi;
+
+  const expertAdvice =
+    isEn && diagnosis.when_to_see_expert_en
+      ? diagnosis.when_to_see_expert_en
+      : diagnosis.when_to_see_expert_hi;
 
   const handleReadAloud = () => {
     if (typeof window === "undefined" || !("speechSynthesis" in window)) {
       alert(
-        locale === "hi"
-          ? "आपके ब्राउज़र में आवाज़ पढ़ने की सुविधा उपलब्ध नहीं है।"
-          : "Text-to-speech is not supported in this browser."
+        isEn
+          ? "Text-to-speech is not supported in this browser."
+          : "आपके ब्राउज़र में आवाज़ पढ़ने की सुविधा उपलब्ध नहीं है।"
       );
       return;
     }
@@ -48,24 +96,22 @@ export default function DiagnosisCard({ diagnosis }: DiagnosisCardProps) {
       return;
     }
 
-    const isEn = locale === "en";
     const textToSpeak = isEn
-      ? (diagnosis.is_healthy
-          ? `Your crop is completely healthy. Crop identified: ${diagnosis.crop_key || "crop"}. No pests or diseases detected.`
-          : `Crop: ${diagnosis.crop_key || "Crop"}. Detected Disease: ${diagnosis.disease_name_en || diagnosis.disease_name_hi || "Leaf infection"}. Severity: ${
-              diagnosis.severity === "high" ? "High" : diagnosis.severity === "medium" ? "Medium" : "Low"
-            }. Recommended treatment: ${(diagnosis.treatment_hi || []).slice(0, 2).join(". ")}. Note: Please verify with your local agricultural officer before spraying.`)
-      : (diagnosis.is_healthy
-          ? `आपकी फसल बिल्कुल स्वस्थ है। फसल का नाम ${diagnosis.crop_name_hi || "फसल"} है। कोई बीमारी नहीं पाई गई।`
-          : `फसल का नाम: ${diagnosis.crop_name_hi || "फसल"}। संभावित बीमारी: ${diagnosis.disease_name_hi || "बीमारी"}। रोग की गंभीरता: ${
-              diagnosis.severity === "high" ? "गंभीर" : diagnosis.severity === "medium" ? "मध्यम" : "हल्की"
-            }। मुख्य उपचार: ${(diagnosis.treatment_hi || []).slice(0, 2).join(". ")}। देशी उपाय: ${(diagnosis.organic_options_hi || []).slice(0, 1).join(". ")}। ध्यान दें: दवा छिड़कने से पहले कृषि अधिकारी से पुष्टि ज़रूर करें।`);
+      ? diagnosis.is_healthy
+        ? `Your crop is healthy. Crop identified: ${cropName}. No pathogen detected.`
+        : `Crop: ${cropName}. Identified Disease: ${diseasePrimary}. Severity: ${
+            diagnosis.severity === "high" ? "High action required" : diagnosis.severity === "medium" ? "Medium" : "Low"
+          }. First treatment: ${treatmentList.slice(0, 2).join(". ")}. Organic option: ${organicList.slice(0, 1).join(". ")}. Advisory: Please confirm with your local agriculture officer before chemical spray.`
+      : diagnosis.is_healthy
+      ? `आपकी फसल बिल्कुल स्वस्थ है। फसल का नाम ${cropName} है। कोई बीमारी नहीं पाई गई।`
+      : `फसल का नाम: ${cropName}। संभावित बीमारी: ${diseasePrimary}। रोग की गंभीरता: ${
+          diagnosis.severity === "high" ? "गंभीर" : diagnosis.severity === "medium" ? "मध्यम" : "हल्की"
+        }। मुख्य उपचार: ${treatmentList.slice(0, 2).join(". ")}। देशी उपाय: ${organicList.slice(0, 1).join(". ")}। ध्यान दें: रासायनिक दवा के छिड़काव से पहले कृषि अधिकारी से पुष्टि अवश्य करें।`;
 
     const utterance = new SpeechSynthesisUtterance(textToSpeak);
     utterance.lang = isEn ? "en-IN" : "hi-IN";
     utterance.rate = 0.95;
 
-    // Pick voice
     const voices = window.speechSynthesis.getVoices();
     if (isEn) {
       const enVoice = voices.find(
@@ -87,6 +133,15 @@ export default function DiagnosisCard({ diagnosis }: DiagnosisCardProps) {
     setIsPlaying(true);
   };
 
+  const toggleLanguage = (lang: "hi" | "en") => {
+    setActiveLang(lang);
+    setLocale(lang);
+    if (isPlaying) {
+      window.speechSynthesis.cancel();
+      setIsPlaying(false);
+    }
+  };
+
   const confidencePercent = Math.round(diagnosis.confidence * 100);
   const isLowConfidence = diagnosis.confidence < 0.6;
 
@@ -94,7 +149,7 @@ export default function DiagnosisCard({ diagnosis }: DiagnosisCardProps) {
     <div className="w-full bg-white/95 backdrop-blur-md rounded-3xl border border-emerald-100 shadow-xl overflow-hidden transition-all duration-300">
       {/* Top Banner Header */}
       <div
-        className={`p-6 sm:p-7 border-b text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
+        className={`p-6 sm:p-7 border-b text-white flex flex-col md:flex-row md:items-center justify-between gap-4 ${
           diagnosis.is_healthy
             ? "bg-gradient-to-r from-emerald-600 via-emerald-700 to-teal-800"
             : diagnosis.severity === "high"
@@ -103,7 +158,7 @@ export default function DiagnosisCard({ diagnosis }: DiagnosisCardProps) {
         }`}
       >
         <div className="flex items-start gap-4">
-          <div className="p-3.5 rounded-2xl bg-white/20 backdrop-blur-md border border-white/20 shadow-inner">
+          <div className="p-3.5 rounded-2xl bg-white/20 backdrop-blur-md border border-white/20 shadow-inner shrink-0">
             {diagnosis.is_healthy ? (
               <ShieldCheck className="w-8 h-8 text-white" />
             ) : (
@@ -113,7 +168,7 @@ export default function DiagnosisCard({ diagnosis }: DiagnosisCardProps) {
           <div>
             <div className="flex flex-wrap items-center gap-2 mb-1.5">
               <span className="text-xs uppercase tracking-wider font-extrabold px-3 py-0.5 rounded-full bg-white/25 backdrop-blur-sm text-white">
-                {diagnosis.crop_name_hi || diagnosis.crop_key || "फसल"}
+                {cropName}
               </span>
               <span className="text-xs text-white/80 font-medium">
                 ({diagnosis.crop_key?.toUpperCase() || "CROP"})
@@ -122,40 +177,73 @@ export default function DiagnosisCard({ diagnosis }: DiagnosisCardProps) {
 
             <h3 className="text-2xl sm:text-3xl font-black tracking-tight drop-shadow-sm">
               {diagnosis.is_healthy
-                ? t("crop_doctor.healthy_crop")
-                : diagnosis.disease_name_hi || "रोग की पहचान"}
+                ? isEn
+                  ? "Healthy Crop - No Disease Detected"
+                  : "फसल पूर्णतः स्वस्थ है"
+                : diseasePrimary}
             </h3>
 
-            {!diagnosis.is_healthy && diagnosis.disease_name_en && (
+            {!diagnosis.is_healthy && diseaseSecondary && (
               <p className="text-sm text-white/90 font-medium mt-0.5">
-                {diagnosis.disease_name_en}
+                {diseaseSecondary}
               </p>
             )}
           </div>
         </div>
 
-        {/* Read Aloud Voice Button */}
-        <button
-          onClick={handleReadAloud}
-          className={`self-start sm:self-center px-4 py-3 rounded-2xl font-bold text-sm flex items-center gap-2.5 transition-all shadow-md active:scale-95 min-h-[48px] ${
-            isPlaying
-              ? "bg-amber-400 text-slate-900 animate-pulse ring-4 ring-amber-200"
-              : "bg-white text-slate-900 hover:bg-slate-50"
-          }`}
-          aria-label={isPlaying ? t("crop_doctor.stop_reading") : t("crop_doctor.read_aloud")}
-        >
-          {isPlaying ? (
-            <>
-              <VolumeX className="w-5 h-5 text-slate-900" />
-              <span>{t("crop_doctor.stop_reading")}</span>
-            </>
-          ) : (
-            <>
-              <Volume2 className="w-5 h-5 text-emerald-700" />
-              <span>{t("crop_doctor.read_aloud")}</span>
-            </>
-          )}
-        </button>
+        {/* Right Action Controls: Hindi/English Switcher & Voice Readout */}
+        <div className="flex flex-wrap items-center gap-3 self-start md:self-center">
+          {/* Bilingual Switcher Pill */}
+          <div className="inline-flex items-center rounded-2xl bg-black/25 backdrop-blur-md p-1 border border-white/20 shadow-inner">
+            <button
+              type="button"
+              onClick={() => toggleLanguage("hi")}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 min-h-[38px] ${
+                !isEn
+                  ? "bg-white text-emerald-900 shadow-md scale-100"
+                  : "text-white/85 hover:text-white"
+              }`}
+            >
+              <span>🇮🇳</span>
+              <span>हिन्दी</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => toggleLanguage("en")}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 min-h-[38px] ${
+                isEn
+                  ? "bg-white text-emerald-900 shadow-md scale-100"
+                  : "text-white/85 hover:text-white"
+              }`}
+            >
+              <span>🇬🇧</span>
+              <span>English</span>
+            </button>
+          </div>
+
+          {/* Read Aloud Voice Button */}
+          <button
+            onClick={handleReadAloud}
+            className={`px-4 py-2.5 rounded-2xl font-bold text-xs sm:text-sm flex items-center gap-2 transition-all shadow-md active:scale-95 min-h-[42px] ${
+              isPlaying
+                ? "bg-amber-400 text-slate-900 animate-pulse ring-4 ring-amber-200"
+                : "bg-white text-slate-900 hover:bg-slate-50"
+            }`}
+            aria-label={isPlaying ? (isEn ? "Stop Audio" : "आवाज़ बंद करें") : isEn ? "Read Aloud" : "बोलकर सुनें"}
+          >
+            {isPlaying ? (
+              <>
+                <VolumeX className="w-4 h-4 text-slate-900" />
+                <span>{isEn ? "Stop Audio" : "आवाज़ बंद करें"}</span>
+              </>
+            ) : (
+              <>
+                <Volume2 className="w-4 h-4 text-emerald-700" />
+                <span>{isEn ? "Read Aloud 🔊" : "बोलकर सुनें 🔊"}</span>
+              </>
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Badges: Confidence & Severity */}
@@ -175,7 +263,7 @@ export default function DiagnosisCard({ diagnosis }: DiagnosisCardProps) {
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
             )}
             <span>
-              {t("crop_doctor.confidence")}: {confidencePercent}%
+              {isEn ? "Confidence" : "सटीकता"}: {confidencePercent}%
             </span>
           </div>
 
@@ -192,12 +280,18 @@ export default function DiagnosisCard({ diagnosis }: DiagnosisCardProps) {
             >
               <AlertTriangle className="w-3.5 h-3.5" />
               <span>
-                {t("crop_doctor.severity")}:{" "}
+                {isEn ? "Severity: " : "गंभीरता: "}
                 {diagnosis.severity === "high"
-                  ? t("crop_doctor.severity_high")
+                  ? isEn
+                    ? "High (Action Required)"
+                    : "गंभीर (तुरंत उपचार)"
                   : diagnosis.severity === "medium"
-                  ? t("crop_doctor.severity_medium")
-                  : t("crop_doctor.severity_low")}
+                  ? isEn
+                    ? "Medium"
+                    : "मध्यम"
+                  : isEn
+                  ? "Low"
+                  : "हल्की"}
               </span>
             </div>
           )}
@@ -205,7 +299,7 @@ export default function DiagnosisCard({ diagnosis }: DiagnosisCardProps) {
 
         {diagnosis.photo_quality_note_hi && (
           <p className="text-xs text-amber-700 font-medium bg-amber-50/80 px-2.5 py-1 rounded-lg border border-amber-200">
-            📸 {diagnosis.photo_quality_note_hi}
+            📸 {isEn ? (diagnosis.photo_quality_note_en || diagnosis.photo_quality_note_hi) : diagnosis.photo_quality_note_hi}
           </p>
         )}
       </div>
@@ -213,14 +307,14 @@ export default function DiagnosisCard({ diagnosis }: DiagnosisCardProps) {
       {/* Main Content Sections */}
       <div className="p-6 sm:p-8 space-y-6">
         {/* Symptoms Section */}
-        {diagnosis.symptoms_hi && diagnosis.symptoms_hi.length > 0 && (
+        {symptomsList && symptomsList.length > 0 && (
           <div className="space-y-2">
             <h4 className="flex items-center gap-2 text-base font-bold text-slate-800">
               <Sparkles className="w-5 h-5 text-amber-600" />
-              <span>{t("crop_doctor.symptoms")}</span>
+              <span>{isEn ? "Symptoms & Visual Indicators" : "पहचाने गए लक्षण"}</span>
             </h4>
             <ul className="grid sm:grid-cols-2 gap-2 text-sm text-slate-700">
-              {diagnosis.symptoms_hi.map((sym, idx) => (
+              {symptomsList.map((sym, idx) => (
                 <li
                   key={idx}
                   className="bg-slate-50/90 rounded-2xl p-3 border border-slate-100 flex items-start gap-2.5"
@@ -234,14 +328,14 @@ export default function DiagnosisCard({ diagnosis }: DiagnosisCardProps) {
         )}
 
         {/* Treatment Guidance (Chemical / Practical) */}
-        {diagnosis.treatment_hi && diagnosis.treatment_hi.length > 0 && (
+        {treatmentList && treatmentList.length > 0 && (
           <div className="space-y-2">
             <h4 className="flex items-center gap-2 text-base font-bold text-slate-800">
               <FlaskConical className="w-5 h-5 text-emerald-600" />
-              <span>{t("crop_doctor.treatment")}</span>
+              <span>{isEn ? "Treatment & Medicines" : "रासायनिक व मुख्य उपचार"}</span>
             </h4>
-            <div className="bg-emerald-50/50 rounded-2xl p-4 border border-emerald-100 space-y-2">
-              {diagnosis.treatment_hi.map((treat, idx) => (
+            <div className="bg-emerald-50/50 rounded-2xl p-4 border border-emerald-100 space-y-2.5">
+              {treatmentList.map((treat, idx) => (
                 <div key={idx} className="flex items-start gap-2.5 text-sm text-slate-800">
                   <span className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
                     {idx + 1}
@@ -254,16 +348,16 @@ export default function DiagnosisCard({ diagnosis }: DiagnosisCardProps) {
         )}
 
         {/* Organic & Traditional Remedies */}
-        {diagnosis.organic_options_hi && diagnosis.organic_options_hi.length > 0 && (
+        {organicList && organicList.length > 0 && (
           <div className="space-y-2">
             <h4 className="flex items-center gap-2 text-base font-bold text-slate-800">
               <Leaf className="w-5 h-5 text-green-600" />
-              <span>{t("crop_doctor.organic_options")}</span>
+              <span>{isEn ? "Organic & Traditional Remedies" : "देशी एवं प्राकृतिक उपचार"}</span>
             </h4>
-            <div className="bg-green-50/40 rounded-2xl p-4 border border-green-200/70 space-y-2">
-              {diagnosis.organic_options_hi.map((org, idx) => (
+            <div className="bg-green-50/40 rounded-2xl p-4 border border-green-200/70 space-y-2.5">
+              {organicList.map((org, idx) => (
                 <div key={idx} className="flex items-start gap-2.5 text-sm text-green-950">
-                  <span className="text-green-600 font-bold">🌿</span>
+                  <span className="text-green-600 font-bold shrink-0">🌿</span>
                   <p className="leading-relaxed">{org}</p>
                 </div>
               ))}
@@ -272,14 +366,14 @@ export default function DiagnosisCard({ diagnosis }: DiagnosisCardProps) {
         )}
 
         {/* Prevention */}
-        {diagnosis.prevention_hi && diagnosis.prevention_hi.length > 0 && (
+        {preventionList && preventionList.length > 0 && (
           <div className="space-y-2">
             <h4 className="flex items-center gap-2 text-base font-bold text-slate-800">
               <ShieldCheck className="w-5 h-5 text-teal-600" />
-              <span>{t("crop_doctor.prevention")}</span>
+              <span>{isEn ? "Preventive Measures" : "भविष्य से बचाव के उपाय"}</span>
             </h4>
             <ul className="space-y-2 text-sm text-slate-700">
-              {diagnosis.prevention_hi.map((prev, idx) => (
+              {preventionList.map((prev, idx) => (
                 <li
                   key={idx}
                   className="bg-teal-50/30 rounded-xl p-3 border border-teal-100/60 flex items-start gap-2"
@@ -293,15 +387,15 @@ export default function DiagnosisCard({ diagnosis }: DiagnosisCardProps) {
         )}
 
         {/* When to see Expert Warning */}
-        {diagnosis.when_to_see_expert_hi && (
+        {expertAdvice && (
           <div className="rounded-2xl p-4 bg-amber-50/80 border border-amber-200/90 flex items-start gap-3">
             <HeartHandshake className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
             <div className="space-y-1">
               <h5 className="font-bold text-sm text-amber-900">
-                {t("crop_doctor.expert_warning")}
+                {isEn ? "When to consult an expert" : "कृषि विशेषज्ञ से कब संपर्क करें"}
               </h5>
               <p className="text-xs sm:text-sm text-amber-800 leading-relaxed">
-                {diagnosis.when_to_see_expert_hi}
+                {expertAdvice}
               </p>
             </div>
           </div>
@@ -310,7 +404,9 @@ export default function DiagnosisCard({ diagnosis }: DiagnosisCardProps) {
         {/* Mandatory Safety Disclaimer */}
         <div className="pt-4 border-t border-slate-100 text-center">
           <p className="text-xs text-slate-500 font-semibold bg-slate-100/70 py-2.5 px-4 rounded-xl border border-slate-200 inline-block">
-            ⚠️ {t("crop_doctor.disclaimer")}
+            {isEn
+              ? "⚠️ AI diagnostic guidance is advisory. Always consult your Block Agriculture Extension Officer before spraying chemicals."
+              : "⚠️ एआई परामर्श केवल मार्गदर्शन के लिए है। रासायनिक छिड़काव से पहले कृषि रक्षा अधिकारी की पुष्टि अवश्य लें।"}
           </p>
         </div>
       </div>

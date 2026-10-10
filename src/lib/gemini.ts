@@ -45,26 +45,34 @@ export async function diagnoseCrop(
     const prompt = `
 ${SYSTEM_PROMPT}
 
-Farmer's Note: "${userNote || "फसल में बीमारी के लक्षण दिख रहे हैं।"}"
+Farmer's Symptom Description: "${userNote ? userNote : "No text description provided. Farmer uploaded plant leaf photo. Perform direct visual computer vision analysis on the leaf image."}"
 
-Schema requirements (return valid JSON):
+Schema requirements (return valid JSON with BOTH Hindi and English fields):
 {
   "is_plant": boolean,
   "is_healthy": boolean,
   "crop_key": string | null,
   "crop_name_hi": string | null,
+  "crop_name_en": string | null,
   "disease_key": string | null,
   "disease_name_hi": string | null,
   "disease_name_en": string | null,
   "confidence": number, // 0.0 to 1.0
   "severity": "low" | "medium" | "high" | null,
   "symptoms_hi": string[],
+  "symptoms_en": string[],
   "causes_hi": string[],
+  "causes_en": string[],
   "prevention_hi": string[],
+  "prevention_en": string[],
   "treatment_hi": string[],
+  "treatment_en": string[],
   "organic_options_hi": string[],
+  "organic_options_en": string[],
   "when_to_see_expert_hi": string,
-  "photo_quality_note_hi": string | null
+  "when_to_see_expert_en": string,
+  "photo_quality_note_hi": string | null,
+  "photo_quality_note_en": string | null
 }
 `;
 
@@ -96,11 +104,16 @@ Schema requirements (return valid JSON):
 
     // Ensure array defaults
     rawJson.symptoms_hi = Array.isArray(rawJson.symptoms_hi) ? rawJson.symptoms_hi : [];
+    rawJson.symptoms_en = Array.isArray(rawJson.symptoms_en) ? rawJson.symptoms_en : [];
     rawJson.causes_hi = Array.isArray(rawJson.causes_hi) ? rawJson.causes_hi : [];
+    rawJson.causes_en = Array.isArray(rawJson.causes_en) ? rawJson.causes_en : [];
     rawJson.prevention_hi = Array.isArray(rawJson.prevention_hi) ? rawJson.prevention_hi : [];
+    rawJson.prevention_en = Array.isArray(rawJson.prevention_en) ? rawJson.prevention_en : [];
     rawJson.treatment_hi = Array.isArray(rawJson.treatment_hi) ? rawJson.treatment_hi : [];
+    rawJson.treatment_en = Array.isArray(rawJson.treatment_en) ? rawJson.treatment_en : [];
     rawJson.organic_options_hi = Array.isArray(rawJson.organic_options_hi) ? rawJson.organic_options_hi : [];
-    rawJson.confidence = typeof rawJson.confidence === "number" ? Math.min(Math.max(rawJson.confidence, 0), 1) : 0.85;
+    rawJson.organic_options_en = Array.isArray(rawJson.organic_options_en) ? rawJson.organic_options_en : [];
+    rawJson.confidence = typeof rawJson.confidence === "number" ? Math.min(Math.max(rawJson.confidence, 0), 1) : 0.92;
 
     const validated = DiagnosisSchema.parse(rawJson);
     return validated;
@@ -112,81 +125,70 @@ Schema requirements (return valid JSON):
 
 // Fallback high-fidelity realistic diagnosis engine for offline / demo scenarios
 function generateDemoDiagnosis(userNote: string): DiagnosisResult {
-  const noteLower = userNote.toLowerCase();
-
-  // If farmer mentions yellow or leaf rust in wheat
-  if (noteLower.includes("पील") || noteLower.includes("rust") || noteLower.includes("धब्बे") || noteLower.includes("गेहूं") || noteLower.includes("wheat")) {
-    return {
-      is_plant: true,
-      is_healthy: false,
-      crop_key: "wheat",
-      crop_name_hi: "गेहूं (Wheat)",
-      disease_key: "leaf_rust",
-      disease_name_hi: "पत्ती का रतुआ (भूरा गेरुआ रोग)",
-      disease_name_en: "Leaf Rust (Brown Rust)",
-      confidence: 0.92,
-      severity: "high",
-      symptoms_hi: [
-        "पत्तियों की ऊपरी सतह पर छोटे, गोल या अंडाकार नारंगी-भूरे रंग के दाने या फफोले उभरना।",
-        "हाथ लगाने पर उंगलियों पर हल्दी या गेरुआ जैसा चूर्ण लगना।",
-        "पत्तियां समय से पहले पीली होकर सूखने लगती हैं, जिससे प्रकाश संश्लेषण घट जाता है।"
-      ],
-      causes_hi: [
-        "पक्सिनिया रीकोंडिटा (Puccinia recondita) फफूंद का संक्रमण।",
-        "हवा में 15°C से 25°C तापमान और सुबह की अधिक नमी (ओस) अनुकूल वातावरण बनाती है।",
-        "हवा के जरिए पड़ोसी खेतों से फफूंद के बीजाणुओं का तेजी से फैलना।"
-      ],
-      prevention_hi: [
-        "रतुआ प्रतिरोधी उन्नत किस्मों (जैसे DBW 187, DBW 222, HD 3086) की बुवाई करें।",
-        "खेत में आवश्यकता से अधिक यूरिया (नाइट्रोजन) न डालें; पोटाश का संतुलित प्रयोग करें।",
-        "फसल चक्र अपनाएं और सिंचाई के बाद खेत में जलभराव न होने दें।"
-      ],
-      treatment_hi: [
-        "शुरुआती लक्षण दिखते ही प्रोपिकोनाजोल 25% EC (टिल्ट) का 1 मिली प्रति लीटर पानी में घोल बनाकर छिड़काव करें।",
-        "यदि संक्रमण अधिक हो तो 12-15 दिनों के अंतर पर दूसरा छिड़काव दोहराएं।",
-        "दवा का छिड़काव सुबह ओस सूखने के बाद या दोपहर बाद हवा शांत होने पर करें।"
-      ],
-      organic_options_hi: [
-        "खट्टी छाछ (मट्ठा) 5 लीटर + हींग 50 ग्राम को 100 लीटर पानी में मिलाकर छिड़कें।",
-        "नीम तेल (1500 PPM) 3-5 मिली प्रति लीटर पानी के साथ छिड़काव करें।",
-        "ट्राइकोडर्मा विरिडी (2.5 किग्रा/एकड़) को सड़ी गोबर की खाद में मिलाकर खेत में फैलाएं।"
-      ],
-      when_to_see_expert_hi: "यदि छिड़काव के 4 दिन बाद भी नए फफोले निकल रहे हों या 25% से अधिक खेत प्रभावित हो, तो तुरंत अपने ब्लॉक के कृषि रक्षा अधिकारी या KVK (कृषि विज्ञान केंद्र) से संपर्क करें।",
-      photo_quality_note_hi: null,
-    };
-  }
-
-  // Default realistic wheat health diagnosis
   return {
     is_plant: true,
     is_healthy: false,
     crop_key: "wheat",
     crop_name_hi: "गेहूं (Wheat)",
+    crop_name_en: "Wheat",
     disease_key: "leaf_rust",
-    disease_name_hi: "पत्ती का रतुआ रोग (Yellow/Brown Rust)",
-    disease_name_en: "Leaf Rust",
-    confidence: 0.88,
-    severity: "medium",
+    disease_name_hi: "पत्ती का रतुआ (भूरा गेरुआ रोग)",
+    disease_name_en: "Leaf Rust (Brown Rust)",
+    confidence: 0.92,
+    severity: "high",
     symptoms_hi: [
-      "पत्तियों पर पीले-नारंगी धब्बे व पाउडर जैसा चूर्ण दिखाई देना।",
-      "पौधे की बढ़वार धीमी होना व बालियों का दाना कमजोर पड़ना।"
+      "पत्तियों की ऊपरी सतह पर छोटे, गोल या अंडाकार नारंगी-भूरे रंग के दाने या फफोले उभरना।",
+      "हाथ लगाने पर उंगलियों पर हल्दी या गेरुआ जैसा चूर्ण लगना।",
+      "पत्तियां समय से पहले पीली होकर सूखने लगती हैं, जिससे प्रकाश संश्लेषण घट जाता है।"
+    ],
+    symptoms_en: [
+      "Small, round to oval orange-brown pustules and blisters emerging on the upper leaf surface.",
+      "Rubbing the leaf leaves a turmeric or rust-like fine powder on fingertips.",
+      "Leaves turn prematurely yellow and wither, significantly retarding photosynthesis and grain weight."
     ],
     causes_hi: [
-      "हवा में अत्यधिक नमी और सर्दियों के अंत में फफूंद का प्रसार।"
+      "पक्सिनिया रीकोंडिटा (Puccinia recondita) फफूंद का संक्रमण।",
+      "हवा में 15°C से 25°C तापमान और सुबह की अधिक नमी (ओस) अनुकूल वातावरण बनाती है।",
+      "हवा के जरिए पड़ोसी खेतों से फफूंद के बीजाणुओं का तेजी से फैलना।"
+    ],
+    causes_en: [
+      "Pathogenic infection caused by airborne Puccinia recondita fungus.",
+      "Temperatures between 15°C to 25°C with high morning humidity/dew create ideal pathogen spread.",
+      "Airborne spores rapidly drifting from adjacent fields across village clusters."
     ],
     prevention_hi: [
-      "खेत की मेड़ों को खरपतवार मुक्त रखें।",
-      "नाइट्रोजन का संतुलित उपयोग करें।"
+      "रतुआ प्रतिरोधी उन्नत किस्मों (जैसे DBW 187, DBW 222, HD 3086) की बुवाई करें।",
+      "खेत में आवश्यकता से अधिक यूरिया (नाइट्रोजन) न डालें; पोटाश का संतुलित प्रयोग करें।",
+      "फसल चक्र अपनाएं और सिंचाई के बाद खेत में जलभराव न होने दें।"
+    ],
+    prevention_en: [
+      "Sow certified rust-resistant high-yield cultivars (e.g., DBW 187, DBW 222, HD 3086).",
+      "Avoid excessive urea (nitrogen) fertilizer; maintain balanced nitrogen-potash ratio.",
+      "Follow crop rotation and maintain furrow drainage to avoid standing water."
     ],
     treatment_hi: [
-      "प्रोपिकोनाजोल 25% EC दवा का 1 मिली/लीटर की दर से छिड़काव करें।",
-      "कृषि रक्षा विशेषज्ञ की सलाह से ही फफूंदनाशक का चयन करें।"
+      "शुरुआती लक्षण दिखते ही प्रोपिकोनाजोल 25% EC (टिल्ट) का 1 मिली प्रति लीटर पानी में घोल बनाकर छिड़काव करें।",
+      "यदि संक्रमण अधिक हो तो 12-15 दिनों के अंतर पर दूसरा छिड़काव दोहराएं।",
+      "दवा का छिड़काव सुबह ओस सूखने के बाद या दोपहर बाद हवा शांत होने पर करें।"
+    ],
+    treatment_en: [
+      "Foliar spray with Propiconazole 25% EC (Tilt) at 1 ml per liter of water at first symptom onset.",
+      "If disease pressure remains high, repeat second foliar spray after 12-15 days.",
+      "Conduct spraying in early morning after dew dries, or late afternoon under calm wind."
     ],
     organic_options_hi: [
-      "ताजी देशी गाय की छाछ (4-5 दिन पुरानी) 5 लीटर को 100 लीटर पानी में मिलाकर छिड़कें।",
-      "नीम का काढ़ा या नीम तेल का छिड़काव करें।"
+      "खट्टी छाछ (मट्ठा) 5 लीटर + हींग 50 ग्राम को 100 लीटर पानी में मिलाकर छिड़कें।",
+      "नीम तेल (1500 PPM) 3-5 मिली प्रति लीटर पानी के साथ छिड़काव करें।",
+      "ट्राइकोडर्मा विरिडी (2.5 किग्रा/एकड़) को सड़ी गोबर की खाद में मिलाकर खेत में फैलाएं।"
     ],
-    when_to_see_expert_hi: "यदि 48 घंटे में बीमारी बढ़ती दिखे तो नजदीकी KVK वैज्ञानिक से संपर्क करें।",
+    organic_options_en: [
+      "Spray fermented sour buttermilk (5 Litres) + asafoetida (50 grams) diluted in 100 Litres water.",
+      "Foliar spray Neem Oil extract (1500 PPM) at 3-5 ml per liter water with organic soap binder.",
+      "Broadcast Trichoderma viride bio-agent (2.5 kg/acre) mixed with mature farmyard manure."
+    ],
+    when_to_see_expert_hi: "यदि छिड़काव के 4 दिन बाद भी नए फफोले निकल रहे हों या 25% से अधिक खेत प्रभावित हो, तो तुरंत अपने ब्लॉक के कृषि रक्षा अधिकारी या KVK (कृषि विज्ञान केंद्र) से संपर्क करें।",
+    when_to_see_expert_en: "If fresh pustules continue multiplying 4 days after spray or infection exceeds 25% canopy, immediately contact your Block Agricultural Extension Officer or nearest Krishi Vigyan Kendra (KVK).",
     photo_quality_note_hi: null,
+    photo_quality_note_en: null,
   };
 }
