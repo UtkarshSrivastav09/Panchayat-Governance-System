@@ -1,4 +1,4 @@
-# 🌾 Smart Panchayat: Gram Sahayak (स्मार्ट पंचायत: ग्राम सहायक)
+# 🌾 Smart Panchayat: Gram Sahayak
 
 <p align="center">
   <img src="https://img.shields.io/badge/Next.js_14-App_Router-black?style=for-the-badge&logo=next.js" alt="Next.js" />
@@ -7,143 +7,143 @@
   <img src="https://img.shields.io/badge/Google_Gemini-Vision_AI-8E75C2?style=for-the-badge&logo=google" alt="Gemini AI" />
   <img src="https://img.shields.io/badge/Supabase-Database_%26_Storage-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase" />
   <img src="https://img.shields.io/badge/MapLibre_GL-Interactive_GIS-396B94?style=for-the-badge&logo=openstreetmap&logoColor=white" alt="MapLibre" />
-  <img src="https://img.shields.io/badge/Language-हिन्दी_First_%7C_English-10B981?style=for-the-badge" alt="Bilingual" />
+  <img src="https://img.shields.io/badge/Language-Bilingual_(EN%2FHI)-10B981?style=for-the-badge" alt="Bilingual" />
 </p>
 
-> **स्मार्ट पंचायत: ग्राम सहायक** ग्रामीण भारत और किसानों के लिए तैयार किया गया एक नेक्स्ट-जेनरेशन डिजिटल कृषि कल्याण व प्रशासनिक पोर्टल है। यह किसानों को AI-आधारित फसल रोग निदान, गाँव-स्तर का प्रकोप पूर्व-चेतावनी रडार, वास्तविक समय मंडी भाव, तथा सरकारी योजनाओं के सीधे सत्यापन की सुविधा प्रदान करता है।
+> **Smart Panchayat: Gram Sahayak** is a next-generation AI-powered rural governance and agricultural welfare platform. It provides farmers and village administrations with instant AI crop disease diagnostics, a geospatial outbreak early warning radar, live commodity mandi rates, and direct verification of government welfare schemes.
 
 ---
 
-## 🌟 Key Features (मुख्य विशेषताएं)
+## 🌟 Key Features
 
-### 1. 🩺 AI Crop Doctor (आर्टिफिशियल इंटेलिजेंस फसल डॉक्टर)
-- **मल्टीमॉडल विज़न विश्लेषण:** किसान फसल या बीमार पत्ती की फोटो अपलोड करके अथवा कैमरा से क्लिक करके तुरंत जांच कर सकते हैं।
-- **Google Gemini Vision AI Integration:** फसल के रोग की सटीक पहचान, गंभीरता (Mild / Moderate / Severe), तथा रोग का कारण।
-- **द्विभाषी उपचार निर्देश:** रासायनिक (Chemical) एवं जैविक/पारंपरिक (Organic) उपचार के स्पष्ट, क्रमबद्ध निर्देश।
-- **वॉइस-फर्स्ट व ऑडियो प्लेबैक:** कम साक्षरता वाले किसान साथियों के लिए पूरे निदान का टेक्स्ट-टू-स्पीच (Text-to-Speech) ऑडियो समर्थन।
+### 1. 🩺 AI Crop Doctor
+- **Multimodal Vision Diagnostics:** Farmers take or upload photos of diseased crops or leaves for real-time analysis.
+- **Google Gemini Vision Integration:** Detects crop disease, severity levels (Mild, Moderate, Severe), and pathogen root causes.
+- **Actionable Treatment Plans:** Step-by-step chemical and organic remedies tailored to local farming conditions.
+- **Voice-First Audio Playback:** Built-in Text-to-Speech audio readout designed for low-literacy accessibility.
 
-### 2. 🗺️ Outbreak Map & Early Warning Radar (रोग प्रकोप मानचित्र व रडार)
-- **जियो-स्पेशियल क्लस्टरिंग:** किसानों द्वारा अपलोड की गई रिपोर्टों के आधार पर रोग प्रकोप के हॉटस्पॉट स्वचालित रूप से मैप पर बनते हैं।
-- **MapLibre GL JS + OpenStreetMap:** हाई-परफॉर्मेंस, बिना किसी अतिरिक्त शुल्क का आधुनिक इंटरएक्टिव मानचित्र।
-- **5 किमी परिधि अलर्ट:** किसान के 5 किलोमीटर के दायरे में रोग फैलने पर डैशबोर्ड पर तत्काल चेतावनी बैनर और रोकथाम की सलाह।
+### 2. 🗺️ Outbreak Map & Early Warning Radar
+- **Geospatial Disease Clustering:** Automatically aggregates disease reports to identify active outbreak hotspots across villages.
+- **MapLibre GL JS & OpenStreetMap:** High-performance, open-source vector map requiring no expensive proprietary API keys.
+- **5 km Proximity Alerts:** Farmers within 5 km of an active outbreak receive instant dashboard alert banners with preventive spray advisories.
 
-### 3. 💰 Live Mandi Rates & Revenue Calculator (लाइव मंडी भाव व विक्रय कैलकुलेटर)
-- **Agmarknet (data.gov.in) सरकारी डेटा:** उत्तर प्रदेश एवं विभिन्न जिलों की मंडियों के दैनिक मॉडल, न्यूनतम व अधिकतम मूल्य।
-- **स्मार्ट छंटाई:** सर्वोच्च मूल्य देने वाली निकटतम मंडी का त्वरित चयन।
-- **राजस्व कैलकुलेटर:** किसान अपनी उपज की मात्रा (क्विंटल) दर्ज करके संभावित कमाई का तुरंत हिसाब लगा सकते हैं।
+### 3. 💰 Live Mandi Rates & Revenue Calculator
+- **Official Agmarknet Price Feed:** Live minimum, maximum, and modal wholesale prices sourced via data.gov.in.
+- **Smart Sorting:** Highlights the highest-paying market in the farmer's district.
+- **Produce Revenue Calculator:** Farmers input their expected harvest quantity in quintals to calculate gross revenue across nearby markets.
 
-### 4. 🏛️ Government Schemes & Welfare Portal (सरकारी योजनाएं व कल्याणकारी सेवाएं)
-- **व्यापक डायरेक्टरी:** PM-KISAN, किसान क्रेडिट कार्ड (KCC), PM फसल बीमा योजना (PMFBY), सॉयल हेल्थ कार्ड, सोलर पम्प सब्सिडी आदि की सम्पूर्ण जानकारी।
-- **श्रेणीवार फ़िल्टरिंग:** DBT, ऋण, सौर ऊर्जा, कृषि यंत्र, व बीमा योजनाओं की लाइव व आगामी स्थिति।
-- **डायरेक्ट ऑनलाइन आवेदन:** पोर्टल से सीधे आवेदन फॉर्म भरें, जो सीधे ग्राम प्रधान / कृषि रक्षा अधिकारी के सत्यापन डेस्क पर जाता है।
+### 4. 🏛️ Government Schemes & Welfare Portal
+- **Welfare Directory:** Comprehensive database of active and upcoming agricultural schemes including PM-KISAN, Kisan Credit Card (KCC), PM Fasal Bima Yojana (PMFBY), and Soil Health Card.
+- **Category Filters:** Filter by Direct Benefit Transfer (DBT), Farm Credit, Solar Pumps, Farm Equipment, and Crop Insurance.
+- **Direct Digital Application:** In-app application modal that routes farmer submissions straight to the Panchayat Officer's review queue.
 
-### 5. 🛡️ Panchayat Officer Command Desk (ग्राम पंचायत अधिकारी कमांड पोर्टल)
-- **अधिकारी लॉगिन (Role-Based Access):** कृषि रक्षा अधिकारी और ग्राम प्रधान के लिए विशेष नियंत्रण कक्ष।
-- **आवेदन सत्यापन डेस्क:** किसानों द्वारा भरे गए सरकारी योजना आवेदनों की समीक्षा, दस्तावेजों का मिलान तथा 1-क्लिक आधिकारिक सत्यापन।
-- **प्रकोप प्रबंधन:** प्रकोप क्लस्टरों को "सत्यापित (Verified)" या "समाधानित (Resolved)" मार्क करने की सुविधा।
+### 5. 🛡️ Panchayat Officer Command Desk
+- **Role-Based Access Control:** Dedicated interface for Agriculture Defense Officers and Gram Pradhans.
+- **Farmer Application Verification:** Review submitted farmer scheme forms, inspect documents, and provide official one-click verification stamps.
+- **Outbreak Management:** Mark active disease clusters as "Verified" or "Resolved" upon agricultural field inspection.
 
-### 6. ⚡ Blazing-Fast Performance & UX
-- **सब-50ms टैब स्विचिंग:** इन-मेमोरी सर्वर कैशिंग और क्लाइंट-साइड `sessionStorage` इंस्टेंट हाइड्रेशन।
-- **Background Prefetching:** नेविगेशन लिंक पर बैकग्राउंड प्रीफेच जिससे पेज बिना किसी लोडिंग लैग के खुलते हैं।
-- **100% रिस्पॉन्सिव डिज़ाइन:** मोबाइल बॉटम डॉक, टैबलेट सपोर्ट, और डेस्कटॉप के लिए अनुकूलित आधुनिक Agrarian UI।
+### 6. ⚡ Blazing-Fast Performance
+- **Sub-50ms Tab Navigation:** Client-side `sessionStorage` hydration and server-side in-memory caching.
+- **Background Prefetching:** Automatic route preloading ensures seamless, zero-lag page transitions.
+- **Responsive Agrarian UI:** Fully optimized for mobile screens, tablets, and desktop displays with bottom navigation docks.
 
 ---
 
-## 🛠️ Technology Stack (तकनीकी संरचना)
+## 🛠️ Architecture & Tech Stack
 
 | Layer | Technologies | Purpose |
 |---|---|---|
-| **Frontend Framework** | Next.js 14 (App Router), React 18 | SSR, ISR & Client SPA navigation |
-| **Language** | TypeScript | पूर्ण टाइप-सेफ्टी व सुगम विकास |
-| **Styling & Icons** | Tailwind CSS, Lucide React | मॉडर्न विजुअल डिज़ाइन व सुलभ आइकन्स |
-| **Artificial Intelligence** | Google Gemini 2.5 Flash / Vision API | इमेज एनालिसिस व रोग डायग्नोसिस |
-| **Database & Auth** | Supabase Postgres + PostGIS, Supabase Auth | रिलेशनल डेटा, जियो-लोकेशन क्लस्टरिंग व ऑथेंटिकेशन |
-| **Storage** | Supabase Storage (`crop-images` bucket) | उच्च-रिज़ॉल्यूशन फसल तस्वीरों का सुरक्षित स्टोरेज |
-| **Interactive Maps** | MapLibre GL JS, OpenStreetMap | ओपन-सोर्स इंटरेक्टिव क्लस्टर मैप |
-| **Mandi Price Feed** | data.gov.in Agmarknet API | आधिकारिक सरकारी मंडी मूल्य डेटा |
-| **Validation** | Zod | स्ट्रिक्ट स्कीमा वैलिडेशन |
+| **Frontend Framework** | Next.js 14 (App Router), React 18 | High-performance hybrid rendering (SSR / SPA) |
+| **Language** | TypeScript | Strict end-to-end type safety |
+| **Styling & UI** | Tailwind CSS, Lucide React | Curated agrarian color system & accessible icons |
+| **Artificial Intelligence** | Google Gemini 2.5 Flash / Vision | Multimodal crop image recognition & treatment logic |
+| **Database & Auth** | Supabase PostgreSQL + PostGIS, Supabase Auth | Relational storage, geospatial clustering, and auth |
+| **Object Storage** | Supabase Storage (`crop-images`) | Secure cloud storage for high-resolution crop photos |
+| **Interactive Maps** | MapLibre GL JS, OpenStreetMap | Interactive GIS map with custom cluster markers |
+| **Mandi Price Feed** | data.gov.in Agmarknet API | Official government wholesale commodity price data |
+| **Schema Validation** | Zod | Runtime API request validation |
 
 ---
 
-## 📂 Project Structure (परियोजना संरचना)
+## 📂 Repository Structure
 
 ```text
 smart-panchayat/
-├── public/                     # Static assets & icons
+├── public/                     # Static icons, manifest, and assets
 ├── src/
 │   ├── app/                    # Next.js 14 App Router
-│   │   ├── api/                # API Route Handlers
+│   │   ├── api/                # Backend API Route Handlers (Serverless)
 │   │   │   ├── auth/           # Login, Register & Session APIs
-│   │   │   ├── diagnosis/      # Gemini AI Crop Analysis API
-│   │   │   ├── mandi/          # Mandi commodity price proxy
-│   │   │   ├── outbreaks/      # Geospatial outbreaks clustering API
-│   │   │   ├── reports/        # Diagnosis reports history API
-│   │   │   └── weather/        # Weather forecast feed
-│   │   ├── crop-doctor/        # AI Crop Doctor diagnosis page
+│   │   │   ├── diagnose/       # Gemini AI Vision crop analysis API
+│   │   │   ├── mandi/          # Mandi price proxy with memory cache
+│   │   │   ├── outbreaks/      # Geospatial disease clustering API
+│   │   │   ├── reports/        # Farmer diagnosis history API
+│   │   │   └── weather/        # Meteorological forecast feed
+│   │   ├── crop-doctor/        # AI Crop Doctor diagnosis interface
 │   │   ├── dashboard/          # Farmer central dashboard
-│   │   ├── login/              # Secure sign-in portal
-│   │   ├── mandi/              # Mandi rates & revenue calculator
-│   │   ├── my-reports/         # Historical reports & applied schemes
-│   │   ├── officer/            # Panchayat officer verification desk
-│   │   ├── outbreaks/          # Interactive outbreak map & alert radar
-│   │   ├── roadmap/            # Upcoming Panchayat digitization modules
-│   │   ├── schemes/            # Government schemes directory & apply modal
-│   │   ├── signup/             # New user registration (Farmer / Officer)
+│   │   ├── login/              # Secure sign-in page
+│   │   ├── mandi/              # Mandi rates & revenue calculator page
+│   │   ├── my-reports/         # Farmer history & submitted applications
+│   │   ├── officer/            # Panchayat Officer verification desk
+│   │   ├── outbreaks/          # Outbreak radar map & alert view
+│   │   ├── roadmap/            # Village digitization roadmap modules
+│   │   ├── schemes/            # Government schemes directory
+│   │   ├── signup/             # User registration (Farmer / Officer)
 │   │   ├── layout.tsx          # Root layout & providers
-│   │   └── globals.css         # Agricultural theme tokens & gradients
-│   ├── components/             # Reusable UI components
-│   │   ├── DiagnosisCard.tsx   # Detailed diagnosis view card
-│   │   ├── LanguageToggle.tsx  # Hindi / English live switch
+│   │   └── globals.css         # Agrarian theme styling
+│   ├── components/             # Reusable UI component library
+│   │   ├── DiagnosisCard.tsx   # Detailed diagnosis results card
+│   │   ├── LanguageToggle.tsx  # Bilingual language switcher (EN / HI)
 │   │   ├── MandiTable.tsx      # Commodity price table
-│   │   ├── Navbar.tsx          # Navigation header & mobile dock
+│   │   ├── Navbar.tsx          # Responsive navigation header & dock
 │   │   ├── OutbreakMap.tsx     # MapLibre interactive map
-│   │   ├── RevenueCalculator.tsx# Yield profit calculator
-│   │   └── SchemeApplicationModal.tsx # Scheme direct application modal
-│   ├── data/                   # Fallback data, locales & crop catalog
-│   │   ├── crops.ts            # Crop varieties metadata
-│   │   ├── schemes.ts          # Central schemes directory
-│   │   └── locales/            # hi.json & en.json i18n dictionaries
-│   └── lib/                    # Core utilities & API clients
-│       ├── auth-storage.ts     # Session state & localStorage sync
-│       ├── gemini.ts           # Google Gemini AI vision caller
-│       ├── i18n.tsx            # Context-based translation engine
-│       ├── mandi.ts            # Mandi caching & data parser
-│       └── supabase.ts         # Supabase client initializer
+│   │   ├── RevenueCalculator.tsx # Produce revenue estimator
+│   │   └── SchemeApplicationModal.tsx # Scheme application form
+│   ├── data/                   # Fallback data, locales, and crop catalog
+│   │   ├── crops.ts            # Crop varieties catalog
+│   │   ├── schemes.ts          # Central schemes repository
+│   │   └── locales/            # en.json & hi.json translations
+│   └── lib/                    # Shared libraries & utilities
+│       ├── auth-storage.ts     # Client session management
+│       ├── gemini.ts           # Google Gemini client integration
+│       ├── i18n.tsx            # Context-based localization provider
+│       ├── mandi.ts            # Mandi caching & normalization
+│       └── supabase.ts         # Supabase client initialization
 ├── supabase/
-│   ├── schema.sql              # Database DDL, PostGIS functions & RLS
-│   └── seed.sql                # Demo outbreak reports & verified clusters
+│   ├── schema.sql              # Database DDL, PostGIS queries, and RLS
+│   └── seed.sql                # Demo outbreak reports and clusters
 ├── .env.example                # Environment variables template
-├── package.json                # Project dependencies & scripts
+├── package.json                # Project dependencies and npm scripts
 └── tsconfig.json               # TypeScript configuration
 ```
 
 ---
 
-## 🚀 Getting Started (शुरुआत कैसे करें)
+## 🚀 Getting Started
 
-### 1. Prerequisites (आवश्यकताएं)
-- **Node.js**: v18.17.0 या उससे नया
-- **npm** या **yarn** / **pnpm**
+### 1. Prerequisites
+- **Node.js**: v18.17.0 or higher
+- **npm** or **yarn** / **pnpm**
 - **Git**
 
-### 2. Clone the Repository (रिपॉजिटरी क्लोन करें)
+### 2. Clone the Repository
 ```bash
-git clone <YOUR_GITHUB_REPO_URL>
-cd "Smart Panchayat"
+git clone https://github.com/UtkarshSrivastav09/Panchayat-Governance-System.git
+cd Panchayat-Governance-System
 ```
 
-### 3. Install Dependencies (निर्भरताएं स्थापित करें)
+### 3. Install Dependencies
 ```bash
 npm install
 ```
 
-### 4. Setup Environment Variables (पर्यावरण चर कॉन्फ़िगर करें)
-`.env.example` की एक प्रति बनाकर उसे `.env.local` नाम दें:
+### 4. Configure Environment Variables
+Create a `.env.local` file in the root directory by copying the example:
 ```bash
 cp .env.example .env.local
 ```
 
-`.env.local` में अपनी कुंजियाँ दर्ज करें:
+Add your credentials:
 ```env
 # Supabase Configuration
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
@@ -154,35 +154,30 @@ SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 GEMINI_API_KEY=your_gemini_api_key
 GEMINI_MODEL=gemini-2.5-flash
 
-# Mandi Government API (Optional live key; demo fallback is built-in)
+# Mandi Government API (Optional; demo fallback is built-in)
 DATA_GOV_API_KEY=your_data_gov_in_api_key
 USE_LIVE_MANDI_API=true
 ```
 
-### 5. Start Development Server (डेवलपमेंट सर्वर शुरू करें)
+### 5. Start the Development Server
 ```bash
 npm run dev
 ```
-
-ब्राउज़र में खोलें: [http://localhost:3000](http://localhost:3000)
-
----
-
-## 🧪 Production Build & Deployment (प्रोडक्शन बिल्ड)
-
-उत्पादन वातावरण (Production) के लिए प्रोजेक्ट को कंपाइल और सत्यापित करने हेतु:
-```bash
-# 1. Type-Check and Build Bundle
-npm run build
-
-# 2. Run Production Server
-npm run start
-```
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
-## 🏛️ Acknowledgements & Hackathon
+## 🌐 Production Deployment
 
-यह प्रोजेक्ट **SRiJAN 2K26** (SRMCEM Lucknow) हैकाथॉन के लिए ग्रामीण सशक्तिकरण और डिजिटल पंचायती राज के उद्देश्य से विकसित किया गया है।
+This project is built on Next.js 14 and is designed to deploy seamlessly on **Vercel**:
 
-Developed with ❤️ for Indian Agriculture and Rural Development.
+1. **Frontend & Serverless Backend:** Both frontend pages and `/api/*` endpoints deploy together on [Vercel](https://vercel.com) with zero server configuration.
+2. **Database & Storage:** Hosted on [Supabase](https://supabase.com).
+3. **Build Command:** `npm run build`
+4. **Output Directory:** `.next`
+
+---
+
+## 🏛️ Acknowledgements
+
+Developed for the **SRiJAN 2K26** Hackathon at SRMCEM Lucknow, advancing rural digital governance and farmer empowerment.
