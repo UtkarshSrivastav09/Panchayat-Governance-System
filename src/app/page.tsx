@@ -26,7 +26,7 @@ export default function RootPage() {
         🌾
       </div>
       <h2 className="text-xl font-black text-slate-800">
-        स्मार्ट पंचायत: ग्राम सहायक
+        ग्रामसेतु (GramSetu)
       </h2>
       <p className="text-sm text-slate-500 mt-1 animate-pulse">
         पोर्टल लोड हो रहा है, कृपया प्रतीक्षा करें...

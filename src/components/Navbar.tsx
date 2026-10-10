@@ -57,20 +57,20 @@ export default function Navbar() {
       <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-emerald-100 shadow-xs transition-all">
         <div className="w-full max-w-[1600px] mx-auto px-2.5 sm:px-4 lg:px-6 h-16 sm:h-18 flex items-center justify-between gap-2">
           
-          {/* Left: Brand Identity (Official Name: Smart Panchayat: Gram Sahayak) */}
+          {/* Left: Brand Identity (GramSetu: Smart Panchayat) */}
           <Link
             href={currentUser ? (currentUser.role === "officer" ? "/officer" : "/dashboard") : "/login"}
-            className="flex items-center gap-2 group shrink-0 min-w-fit"
+            className="flex items-center gap-2.5 group shrink-0 min-w-fit"
           >
             <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-tr from-emerald-700 via-emerald-600 to-teal-500 text-white flex items-center justify-center font-black text-base sm:text-lg shadow-md group-hover:scale-105 transition-all shrink-0">
               🌾
             </div>
             <div className="shrink-0 flex flex-col justify-center">
-              <span className="font-black text-xs sm:text-sm text-slate-900 tracking-tight leading-none block whitespace-nowrap">
-                Smart Panchayat:
+              <span className="font-black text-sm sm:text-base text-slate-900 tracking-tight leading-none block whitespace-nowrap">
+                Gram<span className="text-emerald-700">Setu</span>
               </span>
-              <span className="text-[11px] sm:text-xs font-extrabold text-emerald-700 tracking-tight leading-tight block whitespace-nowrap mt-0.5">
-                Gram Sahayak
+              <span className="text-[10px] sm:text-[11px] font-extrabold text-emerald-800 tracking-wider uppercase leading-tight block whitespace-nowrap mt-0.5">
+                {locale === "hi" ? "ग्रामसेतु • स्मार्ट पंचायत" : "Smart Panchayat"}
               </span>
             </div>
           </Link>

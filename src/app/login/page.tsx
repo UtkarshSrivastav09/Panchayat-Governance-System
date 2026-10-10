@@ -147,12 +147,12 @@ export default function LoginPage() {
                   : "Govt of Uttar Pradesh • Panchayati Raj & Agriculture"}
               </p>
               <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mt-0.5">
-                {t("app_name")}
+                Gram<span className="text-emerald-700">Setu</span> {locale === "hi" ? "लॉगिन" : "Login"}
               </h1>
               <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5">
                 {locale === "hi"
-                  ? "सुरक्षित एकीकृत ग्राम सेवा पोर्टल"
-                  : "Secure Integrated Village Governance Portal"}
+                  ? "ग्रामसेतु • सुरक्षित एकीकृत ग्राम सेवा पोर्टल"
+                  : "GramSetu • Integrated Village Governance Portal"}
               </p>
             </div>
           </div>

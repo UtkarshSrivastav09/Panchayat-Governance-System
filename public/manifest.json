@@ -1,7 +1,7 @@
 {
-  "name": "Smart Panchayat: Gram Sahayak",
-  "short_name": "Gram Sahayak",
-  "description": "A Hindi, voice-first AI assistant for village farmers with crop diagnosis, outbreak alerts, and mandi prices.",
+  "name": "GramSetu: Smart Panchayat Portal",
+  "short_name": "GramSetu",
+  "description": "GramSetu: Bilingual AI assistant for village farmers with crop diagnosis, outbreak radar, and mandi rates.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#F8FAFC",

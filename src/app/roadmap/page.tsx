@@ -94,8 +94,8 @@ export default function RoadmapPage() {
 
         <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
           {locale === "hi"
-            ? "स्मार्ट पंचायत: आगामी डिजिटल सेवाएं"
-            : "Smart Panchayat: Strategic Services Roadmap"}
+            ? "ग्रामसेतु: आगामी डिजिटल सेवाएं"
+            : "GramSetu: Strategic Services Roadmap"}
         </h1>
 
         <p className="text-sm sm:text-base text-slate-600">

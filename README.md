@@ -1,7 +1,7 @@
-# 🌾 Smart Panchayat: Gram Sahayak
+# 🌾 GramSetu: Smart Panchayat Governance Platform
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Next.js_14-App_Router-black?style=for-the-badge&logo=next.js" alt="Next.js" />
+  <img src="https://img.shields.io/badge/Next.js_15-App_Router-black?style=for-the-badge&logo=next.js" alt="Next.js" />
   <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
   <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
   <img src="https://img.shields.io/badge/Google_Gemini-Vision_AI-8E75C2?style=for-the-badge&logo=google" alt="Gemini AI" />
@@ -10,7 +10,7 @@
   <img src="https://img.shields.io/badge/Language-Bilingual_(EN%2FHI)-10B981?style=for-the-badge" alt="Bilingual" />
 </p>
 
-> **Smart Panchayat: Gram Sahayak** is a next-generation AI-powered rural governance and agricultural welfare platform. It provides farmers and village administrations with instant AI crop disease diagnostics, a geospatial outbreak early warning radar, live commodity mandi rates, and direct verification of government welfare schemes.
+> **GramSetu (ग्रामसेतु)** is a next-generation AI-powered rural governance and agricultural welfare platform. It provides farmers and village administrations with instant AI crop disease diagnostics, a geospatial outbreak early warning radar, live commodity mandi rates, and direct verification of government welfare schemes.
 
 ---
 

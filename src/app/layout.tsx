@@ -4,9 +4,9 @@ import { I18nProvider } from "@/lib/i18n";
 import Navbar from "@/components/Navbar";
 
 export const metadata: Metadata = {
-  title: "Smart Panchayat: Gram Sahayak (स्मार्ट पंचायत: ग्राम सहायक)",
+  title: "GramSetu (ग्रामसेतु) - Smart Panchayat Governance System",
   description:
-    "A Hindi, voice-first AI crop doctor, outbreak alert system, and mandi sell helper for farmers in Uttar Pradesh.",
+    "GramSetu: Bilingual AI crop doctor, 5km outbreak surveillance radar, and APMC Mandi marketplace bridge for farmers in Uttar Pradesh.",
   manifest: "/manifest.json",
   icons: {
     icon: "/favicon.ico",

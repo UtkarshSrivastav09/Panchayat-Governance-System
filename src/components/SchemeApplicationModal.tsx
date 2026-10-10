@@ -87,7 +87,7 @@ export default function SchemeApplicationModal({
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <span className="text-[11px] font-black uppercase tracking-wider bg-white/20 text-white px-2.5 py-0.5 rounded-full">
-                {locale === "hi" ? "ग्राम सहायक फास्ट फॉर्म" : "Gram Sahayak Fast Form"}
+                {locale === "hi" ? "ग्रामसेतु फास्ट फॉर्म" : "GramSetu Fast Form"}
               </span>
               <span className="text-xs text-emerald-200 font-bold">
                 {locale === "hi" ? scheme.subsidy_highlight_hi : scheme.subsidy_highlight_en}
@@ -128,8 +128,8 @@ export default function SchemeApplicationModal({
                 </h4>
                 <p className="text-xs text-slate-600 max-w-md mx-auto">
                   {locale === "hi"
-                    ? "आपका आवेदन ग्राम सहायक पोर्टल में सुरक्षित दर्ज कर लिया गया है। ग्राम पंचायत कृषि अधिकारी सत्यापन हेतु इसे अग्रसारित करेंगे।"
-                    : "Your pre-application has been registered with the Gram Panchayat officer for local land verification."}
+                    ? "आपका आवेदन ग्रामसेतु पोर्टल में सुरक्षित दर्ज कर लिया गया है। ग्राम पंचायत कृषि अधिकारी सत्यापन हेतु इसे अग्रसारित करेंगे।"
+                    : "Your pre-application has been registered on the GramSetu portal for local verification."}
                 </p>
               </div>
 

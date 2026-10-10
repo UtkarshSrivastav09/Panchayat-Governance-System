@@ -218,12 +218,12 @@ export default function SignupPage() {
                   : "Govt of Uttar Pradesh • New User Registration"}
               </p>
               <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mt-0.5">
-                {t("nav.signup")}
+                Gram<span className="text-emerald-700">Setu</span> • {t("nav.signup")}
               </h1>
               <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5">
                 {locale === "hi"
-                  ? "कृपया अपनी सही जानकारी दर्ज करें ताकि संबंधित सरकारी सेवाएं मिल सकें"
-                  : "Please provide accurate information for verified village governance"}
+                  ? "ग्रामसेतु नवीन पंजीकरण • संबंधित सरकारी सेवाओं हेतु खाता बनाएं"
+                  : "GramSetu Registration • Create account for verified governance"}
               </p>
             </div>
           </div>
