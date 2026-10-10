@@ -77,7 +77,24 @@ export default function CropDoctorPage() {
   // Demo shortcut for hackathon testing (sample image loader)
   const handleQuickDemoPhoto = async () => {
     try {
-      // Create a dummy image blob for demo
+      const res = await fetch("/images/sample-wheat-rust.jpg");
+      if (res.ok) {
+        const blob = await res.blob();
+        const testFile = new File([blob], "sample-wheat-yellow-rust.jpg", { type: "image/jpeg" });
+        setSelectedFile(testFile);
+        setUserNote(
+          locale === "hi"
+            ? "गेहूं के पत्तों पर पीले-नारंगी धब्बे और धारियां हैं, छूने पर पीला चूर्ण हाथ में लग रहा है।"
+            : "Yellow-orange powdery stripes and pustules observed on wheat leaves."
+        );
+        return;
+      }
+    } catch (e) {
+      console.warn("Could not load sample image from path:", e);
+    }
+
+    try {
+      // Fallback canvas generator if network fetch is blocked
       const canvas = document.createElement("canvas");
       canvas.width = 400;
       canvas.height = 400;
@@ -86,7 +103,6 @@ export default function CropDoctorPage() {
         ctx.fillStyle = "#2d5a27";
         ctx.fillRect(0, 0, 400, 400);
         ctx.fillStyle = "#eab308";
-        // draw wheat-like spots
         for (let i = 0; i < 20; i++) {
           ctx.beginPath();
           ctx.arc(50 + Math.random() * 300, 50 + Math.random() * 300, 8 + Math.random() * 12, 0, Math.PI * 2);
@@ -132,7 +148,7 @@ export default function CropDoctorPage() {
             <label className="block text-sm sm:text-base font-bold text-slate-800">
               १. {locale === "hi" ? "फसल / पत्ते की तस्वीर लें या चुनें:" : "Take or upload photo of crop:"}
             </label>
-            <ImageUploader onImageSelected={setSelectedFile} />
+            <ImageUploader selectedFile={selectedFile} onImageSelected={setSelectedFile} />
           </div>
 
           {/* Quick Demo Photo Shortcut */}

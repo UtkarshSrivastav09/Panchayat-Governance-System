@@ -25,6 +25,13 @@ export default function DiagnosisCard({ diagnosis }: DiagnosisCardProps) {
   const { t, locale } = useI18n();
   const [isPlaying, setIsPlaying] = useState(false);
 
+  // Preload voices on mount for Chrome/Edge
+  useState(() => {
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.getVoices();
+    }
+  });
+
   const handleReadAloud = () => {
     if (typeof window === "undefined" || !("speechSynthesis" in window)) {
       alert(
@@ -41,24 +48,35 @@ export default function DiagnosisCard({ diagnosis }: DiagnosisCardProps) {
       return;
     }
 
-    // Prepare speech script in simple spoken Hindi
-    const textToSpeak = diagnosis.is_healthy
-      ? `आपकी फसल बिल्कुल स्वस्थ है। फसल का नाम ${diagnosis.crop_name_hi || "फसल"} है। कोई बीमारी नहीं पाई गई।`
-      : `फसल का नाम: ${diagnosis.crop_name_hi || "फसल"}। संभावित बीमारी: ${diagnosis.disease_name_hi || "बीमारी"}। रोग की गंभीरता: ${
-          diagnosis.severity === "high" ? "गंभीर" : diagnosis.severity === "medium" ? "मध्यम" : "हल्की"
-        }। मुख्य उपचार: ${diagnosis.treatment_hi.slice(0, 2).join(". ")}। देशी उपाय: ${diagnosis.organic_options_hi.slice(0, 1).join(". ")}। ध्यान दें: दवा छिड़कने से पहले कृषि अधिकारी से पुष्टि ज़रूर करें।`;
+    const isEn = locale === "en";
+    const textToSpeak = isEn
+      ? (diagnosis.is_healthy
+          ? `Your crop is completely healthy. Crop identified: ${diagnosis.crop_key || "crop"}. No pests or diseases detected.`
+          : `Crop: ${diagnosis.crop_key || "Crop"}. Detected Disease: ${diagnosis.disease_name_en || diagnosis.disease_name_hi || "Leaf infection"}. Severity: ${
+              diagnosis.severity === "high" ? "High" : diagnosis.severity === "medium" ? "Medium" : "Low"
+            }. Recommended treatment: ${(diagnosis.treatment_hi || []).slice(0, 2).join(". ")}. Note: Please verify with your local agricultural officer before spraying.`)
+      : (diagnosis.is_healthy
+          ? `आपकी फसल बिल्कुल स्वस्थ है। फसल का नाम ${diagnosis.crop_name_hi || "फसल"} है। कोई बीमारी नहीं पाई गई।`
+          : `फसल का नाम: ${diagnosis.crop_name_hi || "फसल"}। संभावित बीमारी: ${diagnosis.disease_name_hi || "बीमारी"}। रोग की गंभीरता: ${
+              diagnosis.severity === "high" ? "गंभीर" : diagnosis.severity === "medium" ? "मध्यम" : "हल्की"
+            }। मुख्य उपचार: ${(diagnosis.treatment_hi || []).slice(0, 2).join(". ")}। देशी उपाय: ${(diagnosis.organic_options_hi || []).slice(0, 1).join(". ")}। ध्यान दें: दवा छिड़कने से पहले कृषि अधिकारी से पुष्टि ज़रूर करें।`);
 
     const utterance = new SpeechSynthesisUtterance(textToSpeak);
-    utterance.lang = "hi-IN";
+    utterance.lang = isEn ? "en-IN" : "hi-IN";
     utterance.rate = 0.95;
 
-    // Pick Hindi voice if available
+    // Pick voice
     const voices = window.speechSynthesis.getVoices();
-    const hiVoice = voices.find(
-      (v) => v.lang.includes("hi") || v.name.includes("Hindi")
-    );
-    if (hiVoice) {
-      utterance.voice = hiVoice;
+    if (isEn) {
+      const enVoice = voices.find(
+        (v) => v.lang.includes("en-IN") || v.lang.includes("en-US") || v.lang.includes("en")
+      );
+      if (enVoice) utterance.voice = enVoice;
+    } else {
+      const hiVoice = voices.find(
+        (v) => v.lang.includes("hi") || v.name.includes("Hindi")
+      );
+      if (hiVoice) utterance.voice = hiVoice;
     }
 
     utterance.onend = () => setIsPlaying(false);

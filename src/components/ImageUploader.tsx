@@ -8,16 +8,36 @@ import { useI18n } from "@/lib/i18n";
 interface ImageUploaderProps {
   onImageSelected: (file: File | null) => void;
   className?: string;
+  selectedFile?: File | null;
 }
 
 export default function ImageUploader({
   onImageSelected,
   className = "",
+  selectedFile = null,
 }: ImageUploaderProps) {
   const { t, locale } = useI18n();
   const [preview, setPreview] = useState<string | null>(null);
   const [compressing, setCompressing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Sync preview when external selectedFile changes
+  useState(() => {
+    if (selectedFile) {
+      setPreview(URL.createObjectURL(selectedFile));
+    }
+  });
+
+  // Effect to update preview when selectedFile changes
+  useEffect(() => {
+    if (selectedFile) {
+      const url = URL.createObjectURL(selectedFile);
+      setPreview(url);
+      return () => URL.revokeObjectURL(url);
+    } else {
+      setPreview(null);
+    }
+  }, [selectedFile]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
