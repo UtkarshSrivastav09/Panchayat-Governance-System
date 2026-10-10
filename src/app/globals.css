@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #fbfdf9;
+    --foreground: #0f172a;
+  }
+
+  body {
+    color: var(--foreground);
+    background-color: var(--background);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans Devanagari', 'Mangal', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+}
+
+/* Awesome Agrarian Light Theme Background */
+.awesome-light-bg {
+  background-color: #fbfdf9;
+  background-image: 
+    radial-gradient(at 10% 15%, rgba(5, 150, 105, 0.08) 0px, transparent 50%),
+    radial-gradient(at 90% 10%, rgba(217, 119, 6, 0.09) 0px, transparent 50%),
+    radial-gradient(at 30% 60%, rgba(34, 197, 94, 0.06) 0px, transparent 50%),
+    radial-gradient(at 80% 85%, rgba(245, 158, 11, 0.07) 0px, transparent 50%),
+    radial-gradient(at 50% 30%, rgba(16, 185, 129, 0.05) 0px, transparent 60%);
+  background-attachment: fixed;
+}
+
+/* Subtle agricultural soil & leaf micro-texture */
+.agri-grid-pattern {
+  background-image: radial-gradient(rgba(16, 185, 129, 0.12) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Animated gradient glow effect */
+@keyframes ambientGlow {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(20px, -20px) scale(1.08);
+    opacity: 0.7;
+  }
+}
+
+.ambient-orb {
+  animation: ambientGlow 14s ease-in-out infinite alternate;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Interactive touch target guarantee */
+button, a, input, select, textarea {
+  touch-action: manipulation;
+}
