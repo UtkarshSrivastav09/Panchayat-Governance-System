@@ -31,6 +31,9 @@ import {
   Coins,
   Hammer,
   Clock,
+  Video,
+  Pill,
+  Heart,
 } from "lucide-react";
 
 import { getUserSession, UserProfile } from "@/lib/auth-storage";
@@ -769,6 +772,105 @@ export default function DashboardPage() {
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
+        </div>
+      </div>
+
+      {/* 4.5 e-Sanjeevani Tele-Doctor & Rural Healthcare Section (Directly Below Village Works) */}
+      <div className="bg-gradient-to-r from-teal-950 via-teal-900 to-slate-900 rounded-2xl sm:rounded-3xl p-4 sm:p-7 border border-teal-500/30 shadow-xl relative overflow-hidden space-y-4 sm:space-y-5">
+        <div className="absolute top-0 right-0 w-80 h-80 bg-teal-400/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4">
+          <div className="space-y-1 sm:space-y-1.5">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-[10px] font-black uppercase tracking-wider bg-teal-400 text-slate-950 px-2.5 py-0.5 rounded-full shadow-xs flex items-center gap-1">
+                🏥 {locale === "hi" ? "ई-संजीवनी 2.0 • राष्ट्रीय ग्रामीण स्वास्थ्य" : "e-Sanjeevani 2.0 • NHM"}
+              </span>
+              <span className="text-[11px] font-bold text-teal-200 flex items-center gap-1 bg-white/10 px-2 py-0.5 rounded-full">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                {locale === "hi" ? "4 सरकारी डॉक्टर ऑन-ड्यूटी" : "4 Govt Doctors On-Duty"}
+              </span>
+            </div>
+
+            <h3 className="text-lg sm:text-2xl font-black text-white mt-1 flex items-center gap-2">
+              <Stethoscope className="w-5 h-5 sm:w-6 sm:h-6 text-teal-300 shrink-0" />
+              <span>
+                {locale === "hi"
+                  ? "ई-संजीवनी ग्रामीण टेली-कंसल्टेशन व स्वास्थ्य सेवा"
+                  : "e-Sanjeevani Tele-Doctor & Rural Healthcare Hub"}
+              </span>
+            </h3>
+
+            <p className="text-xs sm:text-sm text-teal-100/80 font-medium max-w-2xl leading-relaxed">
+              {locale === "hi"
+                ? "गाँव के किसान व परिवारों हेतु घर बैठे सरकारी अस्पताल (CHC/PHC) के विशेषज्ञ डॉक्टरों से मुफ्त वीडियो परामर्श, डिजिटल पर्चा, जन औषधि केंद्र से 80% सस्ती दवाएं व 24x7 108 एम्बुलेंस सेवा।"
+                : "Free instant video tele-consultation with verified Government CHC/PHC doctors, digital e-prescriptions, Jan Aushadhi generic medicines, and 1-tap 108 emergency SOS."}
+            </p>
+          </div>
+
+          <Link
+            href="/healthcare"
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-black text-xs sm:text-sm shadow-lg shadow-teal-900/40 transition-all shrink-0 active:scale-95 border border-teal-300/30"
+          >
+            <Video className="w-4 h-4" />
+            <span>{locale === "hi" ? "👨‍⚕️ डॉक्टर से वीडियो परामर्श लें →" : "Consult Tele-Doctor Free →"}</span>
+          </Link>
+        </div>
+
+        {/* 3 Healthcare Spotlight Micro-Features */}
+        <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-3">
+          {/* Feature 1: Live Video Clinic */}
+          <Link
+            href="/healthcare"
+            className="bg-white/10 hover:bg-white/15 backdrop-blur-md rounded-xl p-3.5 border border-white/15 transition-all flex items-start gap-3 group"
+          >
+            <div className="w-9 h-9 rounded-xl bg-teal-500/20 text-teal-300 flex items-center justify-center text-lg shrink-0 border border-teal-400/30">
+              👨‍⚕️
+            </div>
+            <div className="space-y-0.5 text-xs">
+              <p className="font-extrabold text-white group-hover:text-teal-300 transition-colors">
+                {locale === "hi" ? "मुफ्त वीडियो टेली-क्लिनिक" : "Free Video Tele-Clinic"}
+              </p>
+              <p className="text-[11px] text-teal-100/70">
+                {locale === "hi" ? "सीधे CHC/PHC डॉक्टर से वीडियो पर बात करें व डिजिटल पर्चा पाएं" : "Connect with on-duty MD doctors & get certified e-prescriptions"}
+              </p>
+            </div>
+          </Link>
+
+          {/* Feature 2: Jan Aushadhi */}
+          <Link
+            href="/healthcare"
+            className="bg-white/10 hover:bg-white/15 backdrop-blur-md rounded-xl p-3.5 border border-white/15 transition-all flex items-start gap-3 group"
+          >
+            <div className="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center text-lg shrink-0 border border-emerald-400/30">
+              💊
+            </div>
+            <div className="space-y-0.5 text-xs">
+              <p className="font-extrabold text-white group-hover:text-emerald-300 transition-colors">
+                {locale === "hi" ? "जन औषधि सस्ती दवाएं" : "Jan Aushadhi Generics"}
+              </p>
+              <p className="text-[11px] text-emerald-100/70">
+                {locale === "hi" ? "ब्रांडेड दवाओं के मुकाबले 70% से 90% कम कीमत पर दवाएं" : "Save up to 80% with verified WHO-GMP generic alternatives"}
+              </p>
+            </div>
+          </Link>
+
+          {/* Feature 3: 108 Emergency Ambulance */}
+          <Link
+            href="/healthcare"
+            className="bg-rose-500/15 hover:bg-rose-500/20 backdrop-blur-md rounded-xl p-3.5 border border-rose-400/30 transition-all flex items-start gap-3 group"
+          >
+            <div className="w-9 h-9 rounded-xl bg-rose-500/20 text-rose-300 flex items-center justify-center text-lg shrink-0 border border-rose-400/40">
+              🚨
+            </div>
+            <div className="space-y-0.5 text-xs">
+              <p className="font-extrabold text-white group-hover:text-rose-300 transition-colors">
+                {locale === "hi" ? "1-टैप 108 एम्बुलेंस व आशा" : "1-Tap 108 Emergency SOS"}
+              </p>
+              <p className="text-[11px] text-rose-100/70">
+                {locale === "hi" ? "24x7 तत्काल एम्बुलेंस व ग्राम आशा कार्यकर्ता फोन डायरेक्टरी" : "24x7 immediate ambulance dispatch & village health contacts"}
+              </p>
+            </div>
+          </Link>
         </div>
       </div>
 

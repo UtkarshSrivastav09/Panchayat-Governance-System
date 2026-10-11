@@ -16,6 +16,14 @@
 
 ## 🌟 Key Features & Core Pillars
 
+### 0. 👳‍♂️ Floating Sarpanch AI Voice Copilot (आवाज़ी ग्राम सहायक)
+- **Voice-First Rural AI Assistant:** Accessible from anywhere on the platform via a floating widget with one-tap Hindi speech recognition (`hi-IN`) and native speech synthesis audio readout.
+- **Dual-Brain Architecture (Groq Llama 3.3 + Pretrained Fail-Safe Model):** 
+  - Powered by **Groq Cloud** (`llama-3.3-70b-versatile`) to answer open-ended questions across any rural topic.
+  - **Automatic Pretrained Fallback:** If the API key is not provided or rate-limited, it automatically falls back to an internal **KVK Agronomy & Panchayat Gyan-Kosh** with zero latency, guaranteeing 100% demo uptime and zero error screens.
+- **Cross-Domain Guidance:** Seamlessly cross-references AI Crop Doctor, live Mandi prices, 15th Finance Commission village works, and direct scheme applications with deep-link action buttons.
+- **One-Tap Quick Chips:** Instant query starters in Hindi (*"इस ग्रामसेतु पोर्टल के बारे में बताओ"*, *"गेहूं में पीला रतुआ का इलाज क्या है?"*, *"PM किसान के ₹2,000 कैसे मिलेंगे?"*).
+
 ### 1. 🏗️ Village Works & Development Tracker (`/village-development`)
 - **Panchayat Infrastructure Transparency:** Villagers can track local development works approved by the Gram Pradhan and Block Development Officer (BDO).
 - **Official Sanction Orders & Fund Tracking:** Displays authentic Work Order numbers (`WO/...`), e-GramSwaraj administrative approval IDs, and funding schemes (15th Finance Commission Tied/Untied Grants, Swachh Bharat Mission, Jal Jeevan Mission).

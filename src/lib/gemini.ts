@@ -38,7 +38,7 @@ export async function diagnoseCrop(
   }
 
   try {
-    const genAI = new GoogleGenerativeAI(apiKey);
+    const genAI = new GoogleGenerativeAI(apiKey!);
     const model = genAI.getGenerativeModel({
       model: modelName,
       generationConfig: {

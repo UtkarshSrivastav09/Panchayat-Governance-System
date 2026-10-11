@@ -15,6 +15,7 @@ export const config = {
     "/mandi/:path*",
     "/officer/:path*",
     "/schemes/:path*",
+    "/healthcare/:path*",
     "/roadmap/:path*",
     "/login",
     "/signup",

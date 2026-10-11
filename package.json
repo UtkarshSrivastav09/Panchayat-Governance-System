@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "dev:webpack": "next dev",
+    "dev": "next dev",
+    "dev:fast": "next dev --disable-source-maps",
+    "dev:turbo": "next dev --turbopack",
     "build": "next build",
-    "start": "next start",
+    "start": "next build && next start",
     "lint": "next lint",
     "seed": "tsx scripts/seed-demo.ts"
   },

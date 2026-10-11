@@ -7,10 +7,19 @@ export interface UserProfile {
   district?: string;
   state?: string;
   phone?: string;
+  abha_id?: string;
   department?: string;
   designation?: string;
   created_at: string;
   password?: string;
+}
+
+export function updateUserSession(updates: Partial<UserProfile>): UserProfile | null {
+  const current = getUserSession();
+  if (!current) return null;
+  const updated = { ...current, ...updates };
+  saveUserSession(updated);
+  return updated;
 }
 
 const STORAGE_KEY = "gram_sahayak_user_session";

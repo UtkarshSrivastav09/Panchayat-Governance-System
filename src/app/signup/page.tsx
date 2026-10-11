@@ -36,6 +36,7 @@ export default function SignupPage() {
   const [phone, setPhone] = useState("");
   const [village, setVillage] = useState("मलिहाबाद (Malihabad)");
   const [district, setDistrict] = useState("Lucknow");
+  const [abhaId, setAbhaId] = useState("");
 
   // Officer specific fields
   const [department, setDepartment] = useState("कृषि रक्षा एवं कल्याण विभाग");
@@ -159,6 +160,7 @@ export default function SignupPage() {
         district: district.trim(),
         state: "Uttar Pradesh",
         phone: phone.trim(),
+        abha_id: abhaId.trim() || undefined,
         department: role === "officer" ? department.trim() : undefined,
         designation: role === "officer" ? designation.trim() : undefined,
         created_at: new Date().toISOString(),
@@ -392,6 +394,24 @@ export default function SignupPage() {
                     <option value="Unnao">📍 उन्नाव (Unnao)</option>
                     <option value="Hardoi">📍 हरदोई (Hardoi)</option>
                   </select>
+                </div>
+
+                <div className="sm:col-span-2 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <label className="block text-xs font-bold text-slate-700">
+                      {locale === "hi" ? "आभा स्वास्थ्य पहचान संख्या (ABHA ID - 14 अंक, वैकल्पिक)" : "Ayushman Bharat ABHA ID (14 digits, Optional)"}
+                    </label>
+                    <span className="text-[10px] text-teal-700 font-bold bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
+                      ई-संजीवनी व सरकारी पर्चा
+                    </span>
+                  </div>
+                  <input
+                    type="text"
+                    value={abhaId}
+                    onChange={(e) => setAbhaId(e.target.value)}
+                    placeholder="उदा. 91-8421-9032-4412"
+                    className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-mono text-slate-900 focus:border-teal-500 focus:outline-hidden focus:ring-2 focus:ring-teal-400 shadow-xs"
+                  />
                 </div>
               </div>
             ) : (
