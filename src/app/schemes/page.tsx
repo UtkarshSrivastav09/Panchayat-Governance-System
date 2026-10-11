@@ -70,33 +70,33 @@ export default function SchemesPage() {
   });
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 pb-20 space-y-6 sm:space-y-8">
+    <div className="max-w-7xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 pb-24 sm:pb-20 space-y-4 sm:space-y-6 lg:space-y-8 w-full min-w-0">
       
       {/* Top Banner Header */}
-      <div className="bg-gradient-to-r from-emerald-900 via-emerald-800 to-teal-900 rounded-3xl p-6 sm:p-10 text-white shadow-xl relative overflow-hidden">
+      <div className="bg-gradient-to-r from-emerald-900 via-emerald-800 to-teal-900 rounded-2xl sm:rounded-3xl p-4 sm:p-8 lg:p-10 text-white shadow-xl relative overflow-hidden w-full min-w-0">
         <div className="absolute right-0 top-0 w-80 h-80 bg-amber-400/15 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="relative z-10 space-y-3 max-w-3xl">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-xs uppercase tracking-wider font-black bg-amber-500 text-slate-950 px-3 py-1 rounded-full shadow-md">
+        <div className="relative z-10 space-y-2 sm:space-y-3 max-w-3xl min-w-0">
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+            <span className="text-[10px] sm:text-xs uppercase tracking-wider font-black bg-amber-500 text-slate-950 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full shadow-md">
               {locale === "hi"
                 ? "🏛️ उत्तर प्रदेश शासन • पंचायती राज व कृषि कल्याण"
                 : "🏛️ Govt of Uttar Pradesh • Panchayati Raj & Agriculture"}
             </span>
-            <span className="text-xs font-bold bg-white/20 text-emerald-100 px-3 py-1 rounded-full border border-white/20">
+            <span className="text-[10px] sm:text-xs font-bold bg-white/20 text-emerald-100 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full border border-white/20">
               {locale === "hi"
                 ? `${GOVT_SCHEMES.length} योजनाएं सूचीबद्ध`
                 : `${GOVT_SCHEMES.length} Welfare Schemes Listed`}
             </span>
           </div>
 
-          <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-white">
+          <h1 className="text-xl sm:text-3xl md:text-4xl font-black tracking-tight text-white break-words">
             {locale === "hi"
               ? "किसान कल्याण एवं सरकारी योजनाएं पोर्टल"
               : "Government Schemes & Welfare Portal"}
           </h1>
 
-          <p className="text-sm sm:text-base text-emerald-100 leading-relaxed font-medium">
+          <p className="text-xs sm:text-base text-emerald-100 leading-relaxed font-medium break-words">
             {locale === "hi"
               ? "ग्राम स्तर पर सभी सक्रिय एवं आगामी कृषि योजनाओं की सम्पूर्ण जानकारी, आवश्यक दस्तावेज, पात्रता एवं सीधे ऑनलाइन आवेदन की सुविधा।"
               : "Discover all live and upcoming agricultural welfare schemes in your village with eligibility details, documents checklist, and direct online application."}

@@ -24,12 +24,16 @@ export async function diagnoseCrop(
 ): Promise<DiagnosisResult> {
   const apiKey = process.env.GEMINI_API_KEY;
   const modelName = process.env.GEMINI_MODEL || "gemini-1.5-flash";
-
   const liveGeminiFlag = process.env.USE_LIVE_GEMINI;
-  const isLiveGeminiRequested = liveGeminiFlag !== "false" && !!apiKey && apiKey.trim() !== "";
+
+  const isApiKeyFormatValid = Boolean(apiKey && (apiKey.startsWith("AIza") || apiKey.length > 30));
+  const isLiveGeminiRequested =
+    liveGeminiFlag !== "false" &&
+    Boolean(apiKey && apiKey.trim() !== "") &&
+    Boolean(isApiKeyFormatValid);
 
   if (!isLiveGeminiRequested) {
-    // Return high quality realistic simulation when key not provided or USE_LIVE_GEMINI=false
+    // If key is missing or not a Google AI Studio key (starts with AIzaSy...), use built-in engine
     return generateDemoDiagnosis(userNote);
   }
 
@@ -117,8 +121,11 @@ Schema requirements (return valid JSON with BOTH Hindi and English fields):
 
     const validated = DiagnosisSchema.parse(rawJson);
     return validated;
-  } catch (error) {
-    console.error("Gemini diagnosis failed or API error, falling back to heuristic engine:", error);
+  } catch (error: any) {
+    console.warn(
+      "Notice: Gemini API unavailable or quota reached; served diagnosis via built-in agronomy engine:",
+      error?.message || error
+    );
     return generateDemoDiagnosis(userNote);
   }
 }

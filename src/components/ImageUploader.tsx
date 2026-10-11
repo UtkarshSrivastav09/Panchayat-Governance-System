@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import imageCompression from "browser-image-compression";
 import { Camera, Image as ImageIcon, X, RefreshCw } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
@@ -21,12 +21,6 @@ export default function ImageUploader({
   const [compressing, setCompressing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Sync preview when external selectedFile changes
-  useState(() => {
-    if (selectedFile) {
-      setPreview(URL.createObjectURL(selectedFile));
-    }
-  });
 
   // Effect to update preview when selectedFile changes
   useEffect(() => {

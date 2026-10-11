@@ -44,38 +44,49 @@ export default function SchemeApplicationModal({
   const [submitting, setSubmitting] = useState(false);
   const [submittedToken, setSubmittedToken] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
 
-    setTimeout(() => {
-      const generatedToken = `UP-GS-2026-${Math.floor(100000 + Math.random() * 900000)}`;
-      
-      // Save application safely in local storage
-      try {
-        const existing = JSON.parse(localStorage.getItem("panchayat_scheme_applications") || "[]");
-        const newRecord = {
-          id: generatedToken,
-          scheme_id: scheme.id,
-          scheme_name: locale === "hi" ? scheme.name_hi : scheme.name_en,
-          applicant_name: fullName,
-          phone,
-          village,
-          district,
-          aadhaar: aadhaar ? `XXXX-XXXX-${aadhaar.slice(-4)}` : "XXXX-XXXX-1234",
-          land_area: landArea,
-          khata_number: khataNumber,
-          submitted_at: new Date().toISOString(),
-          status: "Under Verification (Gram Panchayat)",
-        };
-        localStorage.setItem("panchayat_scheme_applications", JSON.stringify([newRecord, ...existing]));
-      } catch (err) {
-        console.warn("Storage save error:", err);
-      }
+    const generatedToken = `UP-GS-2026-${Math.floor(100000 + Math.random() * 900000)}`;
+    const newRecord = {
+      id: generatedToken,
+      scheme_id: scheme.id,
+      scheme_name: locale === "hi" ? scheme.name_hi : scheme.name_en,
+      applicant_name: fullName,
+      phone,
+      village,
+      district,
+      aadhaar: aadhaar ? `XXXX-XXXX-${aadhaar.slice(-4)}` : "XXXX-XXXX-1234",
+      land_area: landArea,
+      khata_number: khataNumber,
+      submitted_at: new Date().toISOString(),
+      status: "Under Verification (Gram Panchayat)",
+    };
 
-      setSubmittedToken(generatedToken);
-      setSubmitting(false);
-    }, 600);
+    // 1. Post to live API endpoint so Officer Desk immediately receives it
+    try {
+      await fetch("/api/schemes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newRecord),
+      });
+    } catch (err) {
+      console.warn("API post error, falling back to local storage:", err);
+    }
+
+    // 2. Save application safely in local storage for offline / persistence
+    try {
+      const existing = JSON.parse(localStorage.getItem("panchayat_scheme_applications") || "[]");
+      localStorage.setItem("panchayat_scheme_applications", JSON.stringify([newRecord, ...existing]));
+      window.dispatchEvent(new Event("panchayat_scheme_submitted"));
+      window.dispatchEvent(new Event("storage"));
+    } catch (err) {
+      console.warn("Storage save error:", err);
+    }
+
+    setSubmittedToken(generatedToken);
+    setSubmitting(false);
   };
 
   return (

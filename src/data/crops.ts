@@ -109,3 +109,51 @@ export function normalizeCropKey(raw: string): string {
   if (clean.includes("mango") || clean.includes("आम")) return "mango";
   return clean.replace(/[^a-z0-9]/g, "_");
 }
+
+export function getLocalizedCropName(key: string, locale: "hi" | "en"): string {
+  if (!key) return locale === "en" ? "Crop" : "फसल";
+  const crop = getCropByKey(normalizeCropKey(key));
+  if (crop) {
+    return locale === "en" ? crop.name_en : crop.name_hi;
+  }
+  return key;
+}
+
+export function getLocalizedDiseaseName(cropKey: string, diseaseKey: string, locale: "hi" | "en"): string {
+  if (!diseaseKey) return locale === "en" ? "Healthy Crop" : "स्वस्थ फसल";
+  const crop = getCropByKey(normalizeCropKey(cropKey || ""));
+  if (crop) {
+    const disease = crop.commonDiseases.find(
+      (d) => d.key.toLowerCase() === diseaseKey.toLowerCase()
+    );
+    if (disease) {
+      return locale === "en" ? disease.name_en : disease.name_hi;
+    }
+  }
+
+  const dKey = diseaseKey.toLowerCase();
+  if (dKey.includes("leaf_rust") || dKey.includes("leaf rust")) {
+    return locale === "en" ? "Leaf Rust (Brown Rust)" : "पत्ती का रतुआ (भूरा गेरुआ)";
+  }
+  if (dKey.includes("yellow_rust") || dKey.includes("yellow rust")) {
+    return locale === "en" ? "Yellow Rust (Stripe Rust)" : "पीला रतुआ (हल्दी रोग)";
+  }
+  if (dKey.includes("late_blight") || dKey.includes("late blight")) {
+    return locale === "en" ? "Late Blight" : "पछेती झुलसा (लेट ब्लाइट)";
+  }
+  if (dKey.includes("early_blight") || dKey.includes("early blight")) {
+    return locale === "en" ? "Early Blight" : "अगेती झुलसा";
+  }
+  if (dKey.includes("white_rust") || dKey.includes("white rust")) {
+    return locale === "en" ? "White Rust" : "सफेद रतुआ";
+  }
+  if (dKey.includes("blast")) {
+    return locale === "en" ? "Rice Blast" : "झोंका रोग (ब्लास्ट)";
+  }
+  if (dKey.includes("healthy")) {
+    return locale === "en" ? "Completely Healthy Crop" : "पूर्णतः स्वस्थ फसल";
+  }
+
+  return diseaseKey;
+}
+

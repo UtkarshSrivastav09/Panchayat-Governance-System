@@ -6,6 +6,7 @@ import { useI18n } from "@/lib/i18n";
 import OutbreakMap, { OutbreakCluster } from "@/components/OutbreakMap";
 import AlertBanner from "@/components/AlertBanner";
 import { getUserSession } from "@/lib/auth-storage";
+import { getLocalizedCropName, getLocalizedDiseaseName } from "@/data/crops";
 import {
   MapPin,
   AlertTriangle,
@@ -70,17 +71,17 @@ export default function OutbreaksPage() {
   });
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-6 sm:pt-8 space-y-6">
+    <div className="max-w-6xl mx-auto px-3 xs:px-4 sm:px-6 pt-4 sm:pt-8 space-y-5 sm:space-y-6 w-full min-w-0">
       {/* Page Header */}
-      <div className="space-y-2">
+      <div className="space-y-1.5 sm:space-y-2">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-100 text-rose-800 text-xs font-bold">
           <AlertTriangle className="w-3.5 h-3.5 text-rose-600" />
           <span>{locale === "hi" ? "सामुदायिक रोग निगरानी" : "Community Disease Monitoring"}</span>
         </div>
-        <h1 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight">
+        <h1 className="text-xl sm:text-3xl md:text-4xl font-black text-slate-900 tracking-tight break-words">
           {t("outbreaks.title")}
         </h1>
-        <p className="text-sm sm:text-base text-slate-600 max-w-2xl">
+        <p className="text-xs sm:text-base text-slate-600 max-w-2xl">
           {t("outbreaks.subtitle")}
         </p>
       </div>
@@ -127,55 +128,67 @@ export default function OutbreaksPage() {
         </h3>
 
         <div className="grid sm:grid-cols-2 gap-4">
-          {filteredClusters.map((cluster) => (
-            <div
-              key={cluster.cluster_key}
-              className="bg-slate-50/80 rounded-2xl p-4 border border-slate-200/80 space-y-3"
-            >
-              <div className="flex items-start justify-between gap-2">
-                <div>
-                  <h4 className="font-black text-slate-900 text-base">
-                    {cluster.disease_name_hi || cluster.disease_key}
-                  </h4>
-                  <p className="text-xs text-slate-500 font-semibold">
-                    {cluster.crop_name_hi || cluster.crop_key}
-                  </p>
-                </div>
+          {filteredClusters.map((cluster) => {
+            const diseaseTitle =
+              locale === "en"
+                ? (cluster.disease_name_en || getLocalizedDiseaseName(cluster.crop_key, cluster.disease_key, "en"))
+                : (cluster.disease_name_hi || getLocalizedDiseaseName(cluster.crop_key, cluster.disease_key, "hi"));
+            const cropTitle =
+              locale === "en"
+                ? (cluster.crop_name_en || getLocalizedCropName(cluster.crop_key, "en"))
+                : (cluster.crop_name_hi || getLocalizedCropName(cluster.crop_key, "hi"));
+            const noteText = locale === "en" ? (cluster.note_en || cluster.note) : cluster.note;
 
-                <span
-                  className={`text-xs font-bold px-2.5 py-0.5 rounded-full border ${
-                    cluster.status === "verified"
-                      ? "bg-emerald-100 text-emerald-800 border-emerald-300"
-                      : "bg-amber-100 text-amber-800 border-amber-300"
-                  }`}
-                >
-                  {cluster.status === "verified"
-                    ? t("outbreaks.status_verified")
-                    : t("outbreaks.status_open")}
-                </span>
-              </div>
+            return (
+              <div
+                key={cluster.cluster_key}
+                className="bg-slate-50/80 rounded-2xl p-4 border border-slate-200/80 space-y-3"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <h4 className="font-black text-slate-900 text-base">
+                      {diseaseTitle}
+                    </h4>
+                    <p className="text-xs text-slate-500 font-semibold">
+                      {cropTitle}
+                    </p>
+                  </div>
 
-              <div className="grid grid-cols-2 gap-2 text-xs">
-                <div className="flex items-center gap-1.5 text-slate-600">
-                  <Users className="w-4 h-4 text-slate-400" />
-                  <span>
-                    <strong>{cluster.farmer_count}</strong> {locale === "hi" ? "प्रभावित किसान" : "Farmers"}
+                  <span
+                    className={`text-xs font-bold px-2.5 py-0.5 rounded-full border ${
+                      cluster.status === "verified"
+                        ? "bg-emerald-100 text-emerald-800 border-emerald-300"
+                        : "bg-amber-100 text-amber-800 border-amber-300"
+                    }`}
+                  >
+                    {cluster.status === "verified"
+                      ? t("outbreaks.status_verified")
+                      : t("outbreaks.status_open")}
                   </span>
                 </div>
 
-                <div className="flex items-center gap-1.5 text-slate-600">
-                  <Calendar className="w-4 h-4 text-slate-400" />
-                  <span>{new Date(cluster.latest_report).toLocaleDateString("hi-IN")}</span>
-                </div>
-              </div>
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  <div className="flex items-center gap-1.5 text-slate-600">
+                    <Users className="w-4 h-4 text-slate-400" />
+                    <span>
+                      <strong>{cluster.farmer_count}</strong> {locale === "hi" ? "प्रभावित किसान" : "Farmers"}
+                    </span>
+                  </div>
 
-              {cluster.note && (
-                <p className="text-xs text-emerald-900 bg-emerald-50 p-2.5 rounded-xl border border-emerald-200 font-medium">
-                  📢 {cluster.note}
-                </p>
-              )}
-            </div>
-          ))}
+                  <div className="flex items-center gap-1.5 text-slate-600">
+                    <Calendar className="w-4 h-4 text-slate-400" />
+                    <span>{new Date(cluster.latest_report).toLocaleDateString(locale === "en" ? "en-IN" : "hi-IN")}</span>
+                  </div>
+                </div>
+
+                {noteText && (
+                  <p className="text-xs text-emerald-900 bg-emerald-50 p-2.5 rounded-xl border border-emerald-200 font-medium">
+                    📢 {noteText}
+                  </p>
+                )}
+              </div>
+            );
+          })}
         </div>
 
         {/* Disclaimer */}

@@ -84,15 +84,15 @@ export default function RoadmapPage() {
   ];
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-6 sm:pt-10 space-y-8">
+    <div className="max-w-5xl mx-auto px-3 xs:px-4 sm:px-6 pt-4 sm:pt-10 space-y-5 sm:space-y-8 w-full min-w-0">
       {/* Header */}
-      <div className="text-center max-w-2xl mx-auto space-y-3">
+      <div className="text-center max-w-2xl mx-auto space-y-2.5 sm:space-y-3">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 text-xs font-bold">
           <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
           <span>{locale === "hi" ? "उत्तर प्रदेश पंचायती राज • डिजिटल ग्राम मिशन" : "Digital Gram Mission • Strategic Roadmap"}</span>
         </div>
 
-        <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+        <h1 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight break-words">
           {locale === "hi"
             ? "ग्रामसेतु: आगामी डिजिटल सेवाएं"
             : "GramSetu: Strategic Services Roadmap"}

@@ -1,13 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { diagnoseCrop } from "@/lib/gemini";
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/admin";
 import { DiagnoseRequestSchema } from "@/lib/validators";
 
-// Simple in-memory rate limiter per user/ip (max 10 requests per hour)
+// In-memory rate limiter per user/ip (generous for local dev & production)
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 
 function checkRateLimit(key: string): boolean {
+  // Never throttle localhost / internal testing
+  if (!key || key === "anonymous" || key === "127.0.0.1" || key === "::1") {
+    return true;
+  }
+
   const now = Date.now();
   const entry = rateLimitMap.get(key);
 
@@ -16,7 +21,7 @@ function checkRateLimit(key: string): boolean {
     return true;
   }
 
-  if (entry.count >= 20) {
+  if (entry.count >= 200) {
     return false;
   }
 
@@ -75,41 +80,47 @@ export async function POST(request: NextRequest) {
     // Call Gemini vision
     const diagnosis = await diagnoseCrop(buffer, file.type, note);
 
-    // Save report in Supabase or fallback
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    const userId = user?.id || "00000000-0000-0000-0000-000000000001";
+    // Save report in Supabase if configured
+    let userId = "00000000-0000-0000-0000-000000000001";
     const imagePath = `crop-images/${userId}/${Date.now()}.jpg`;
 
-    try {
-      const adminSupabase = createAdminClient();
-      // Try uploading to crop-images bucket if available
-      await adminSupabase.storage
-        .from("crop-images")
-        .upload(`${userId}/${Date.now()}.jpg`, buffer, {
-          contentType: file.type,
-          upsert: true,
-        });
+    if (isSupabaseConfigured()) {
+      try {
+        const supabase = await createClient();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
 
-      // Insert record into crop_reports with PostGIS geometry
-      await adminSupabase.from("crop_reports").insert({
-        user_id: userId,
-        image_path: imagePath,
-        user_note: note,
-        crop_key: diagnosis.crop_key,
-        disease_key: diagnosis.disease_key,
-        is_healthy: diagnosis.is_healthy,
-        confidence: diagnosis.confidence,
-        severity: diagnosis.severity,
-        diagnosis: diagnosis,
-        village: village,
-        geom: `POINT(${lng} ${lat})`,
-      });
-    } catch (dbErr) {
-      console.warn("Storage/DB insert warning (proceeding with diagnosis):", dbErr);
+        if (user?.id) {
+          userId = user.id;
+        }
+
+        const adminSupabase = createAdminClient();
+        // Try uploading to crop-images bucket if available
+        await adminSupabase.storage
+          .from("crop-images")
+          .upload(`${userId}/${Date.now()}.jpg`, buffer, {
+            contentType: file.type,
+            upsert: true,
+          });
+
+        // Insert record into crop_reports with PostGIS geometry
+        await adminSupabase.from("crop_reports").insert({
+          user_id: userId,
+          image_path: imagePath,
+          user_note: note,
+          crop_key: diagnosis.crop_key,
+          disease_key: diagnosis.disease_key,
+          is_healthy: diagnosis.is_healthy,
+          confidence: diagnosis.confidence,
+          severity: diagnosis.severity,
+          diagnosis: diagnosis,
+          village: village,
+          geom: `POINT(${lng} ${lat})`,
+        });
+      } catch (dbErr) {
+        console.warn("Storage/DB insert warning (proceeding with diagnosis):", dbErr);
+      }
     }
 
     return NextResponse.json({

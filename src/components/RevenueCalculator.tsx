@@ -67,7 +67,7 @@ export default function RevenueCalculator({
               className="w-full rounded-2xl border border-amber-300 bg-white px-4 py-3.5 text-lg font-bold text-slate-900 shadow-sm focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-400 min-h-[48px]"
             />
             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-500">
-              क्विंटल
+              {locale === "hi" ? "क्विंटल" : "Quintal"}
             </span>
           </div>
 
@@ -103,7 +103,7 @@ export default function RevenueCalculator({
             ₹{estimatedRevenue.toLocaleString("en-IN")}
           </div>
           <p className="text-xs text-slate-500 mt-1">
-            {quantity} क्विंटल × ₹{activePrice} / क्विंटल
+            {quantity} {locale === "hi" ? "क्विंटल" : "Quintal"} × ₹{activePrice} / {locale === "hi" ? "क्विंटल" : "qtl"}
           </p>
         </div>
 

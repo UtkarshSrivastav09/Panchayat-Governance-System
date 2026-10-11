@@ -1,4 +1,3 @@
-import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function updateSession(request: NextRequest) {
@@ -8,7 +7,7 @@ export async function updateSession(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
 
-  // Extract session from cookie
+  // Extract session from cookie (instant sub-millisecond check)
   const sessionCookie =
     request.cookies.get("gram_sahayak_session")?.value ||
     request.cookies.get("demo_user")?.value;
@@ -22,13 +21,22 @@ export async function updateSession(request: NextRequest) {
     }
   }
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://placeholder.supabase.co";
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "placeholder-anon-key";
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const isSupabaseLive = Boolean(
+    supabaseUrl &&
+    !supabaseUrl.includes("placeholder") &&
+    !supabaseUrl.includes("example.com") &&
+    supabaseAnonKey &&
+    !supabaseAnonKey.includes("placeholder")
+  );
 
   let supabaseUser = null;
-  if (!supabaseUrl.includes("placeholder")) {
+  // If sessionUser is already known, avoid expensive remote auth network roundtrips
+  if (!sessionUser && isSupabaseLive) {
     try {
-      const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
+      const { createServerClient } = await import("@supabase/ssr");
+      const supabase = createServerClient(supabaseUrl!, supabaseAnonKey!, {
         cookies: {
           getAll() {
             return request.cookies.getAll();

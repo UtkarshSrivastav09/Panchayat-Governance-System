@@ -5,6 +5,7 @@ import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useI18n } from "@/lib/i18n";
 import { AlertTriangle, Users, Calendar, MapPin, CheckCircle, ShieldAlert } from "lucide-react";
+import { getLocalizedCropName, getLocalizedDiseaseName } from "@/data/crops";
 
 export interface OutbreakCluster {
   cluster_key: string;
@@ -16,10 +17,13 @@ export interface OutbreakCluster {
   center_lng: number;
   latest_report: string;
   crop_name_hi?: string;
+  crop_name_en?: string;
   disease_name_hi?: string;
+  disease_name_en?: string;
   status?: "open" | "verified" | "resolved";
   distance_km?: number;
   note?: string;
+  note_en?: string;
 }
 
 interface OutbreakMapProps {
@@ -152,10 +156,14 @@ export default function OutbreakMap({
               </span>
               <div>
                 <h4 className="font-extrabold text-slate-900 text-base">
-                  {selectedCluster.disease_name_hi || selectedCluster.disease_key}
+                  {locale === "en"
+                    ? (selectedCluster.disease_name_en || getLocalizedDiseaseName(selectedCluster.crop_key, selectedCluster.disease_key, "en"))
+                    : (selectedCluster.disease_name_hi || getLocalizedDiseaseName(selectedCluster.crop_key, selectedCluster.disease_key, "hi"))}
                 </h4>
                 <p className="text-xs text-slate-500 font-semibold">
-                  {selectedCluster.crop_name_hi || selectedCluster.crop_key}
+                  {locale === "en"
+                    ? (selectedCluster.crop_name_en || getLocalizedCropName(selectedCluster.crop_key, "en"))
+                    : (selectedCluster.crop_name_hi || getLocalizedCropName(selectedCluster.crop_key, "hi"))}
                 </p>
               </div>
             </div>
@@ -182,10 +190,16 @@ export default function OutbreakMap({
             </div>
           </div>
 
+          {selectedCluster.note && (
+            <p className="text-xs text-emerald-950 bg-emerald-50 p-2 rounded-xl border border-emerald-200 font-medium">
+              📢 {locale === "en" ? (selectedCluster.note_en || selectedCluster.note) : selectedCluster.note}
+            </p>
+          )}
+
           <div className="flex items-center justify-between text-xs pt-1 border-t border-slate-100">
             <span className="text-slate-500 flex items-center gap-1">
               <Calendar className="w-3.5 h-3.5" />
-              {new Date(selectedCluster.latest_report).toLocaleDateString("hi-IN")}
+              {new Date(selectedCluster.latest_report).toLocaleDateString(locale === "en" ? "en-IN" : "hi-IN")}
             </span>
             <span
               className={`font-bold px-2 py-0.5 rounded-full ${

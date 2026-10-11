@@ -92,17 +92,17 @@ export default function MandiPage() {
   }, [selectedCrop, selectedDistrict]);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-6 sm:pt-8 space-y-8">
+    <div className="max-w-6xl mx-auto px-3 xs:px-4 sm:px-6 pt-4 sm:pt-8 space-y-5 sm:space-y-8 w-full min-w-0">
       {/* Page Header */}
-      <div className="space-y-2">
+      <div className="space-y-1.5 sm:space-y-2">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-bold">
           <TrendingUp className="w-3.5 h-3.5 text-amber-600" />
           <span>{locale === "hi" ? "दैनिक कृषि उपज भाव" : "Daily Mandi Market Rates"}</span>
         </div>
-        <h1 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight">
+        <h1 className="text-xl sm:text-3xl md:text-4xl font-black text-slate-900 tracking-tight break-words">
           {t("mandi.title")}
         </h1>
-        <p className="text-sm sm:text-base text-slate-600 max-w-2xl">
+        <p className="text-xs sm:text-base text-slate-600 max-w-2xl">
           {t("mandi.subtitle")}
         </p>
       </div>

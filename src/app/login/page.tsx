@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
-import { createClient } from "@/lib/supabase/client";
+import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { saveUserSession, verifyCredentials } from "@/lib/auth-storage";
 import AlertNotification from "@/components/ui/AlertNotification";
 import {
@@ -53,34 +53,36 @@ export default function LoginPage() {
 
       let authenticatedUser = null;
 
-      // 1. Try Supabase Auth if online
-      try {
-        const supabase = createClient();
-        const { data, error: authError } = await supabase.auth.signInWithPassword({
-          email: cleanIdentifier,
-          password: password,
-        });
+      // 1. Try Supabase Auth only if configured with a real URL and identifier is an email
+      if (isSupabaseConfigured() && cleanIdentifier.includes("@")) {
+        try {
+          const supabase = createClient();
+          const { data, error: authError } = await supabase.auth.signInWithPassword({
+            email: cleanIdentifier,
+            password: password,
+          });
 
-        if (!authError && data?.user) {
-          const { data: profile } = await supabase
-            .from("profiles")
-            .select("*")
-            .eq("id", data.user.id)
-            .single();
+          if (!authError && data?.user) {
+            const { data: profile } = await supabase
+              .from("profiles")
+              .select("*")
+              .eq("id", data.user.id)
+              .single();
 
-          authenticatedUser = {
-            id: data.user.id,
-            email: data.user.email || cleanIdentifier,
-            full_name: profile?.full_name || (selectedRole === "officer" ? "अधिकारी" : "किसान"),
-            role: (profile?.role as "farmer" | "officer") || selectedRole,
-            village: profile?.village || "मलिहाबाद",
-            district: profile?.district || "Lucknow",
-            state: profile?.state || "Uttar Pradesh",
-            created_at: data.user.created_at || new Date().toISOString(),
-          };
+            authenticatedUser = {
+              id: data.user.id,
+              email: data.user.email || cleanIdentifier,
+              full_name: profile?.full_name || (selectedRole === "officer" ? "अधिकारी" : "किसान"),
+              role: (profile?.role as "farmer" | "officer") || selectedRole,
+              village: profile?.village || "मलिहाबाद",
+              district: profile?.district || "Lucknow",
+              state: profile?.state || "Uttar Pradesh",
+              created_at: data.user.created_at || new Date().toISOString(),
+            };
+          }
+        } catch {
+          // Fallback to local verified registry
         }
-      } catch (dbErr) {
-        // Fallback to local verified registry
       }
 
       // 2. Strict verification against registered registry

@@ -122,17 +122,17 @@ export default function CropDoctorPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-6 sm:pt-8 space-y-8">
+    <div className="max-w-4xl mx-auto px-3 xs:px-4 sm:px-6 pt-4 sm:pt-8 space-y-6 sm:space-y-8 w-full min-w-0">
       {/* Page Header */}
-      <div className="text-center max-w-2xl mx-auto space-y-2">
+      <div className="text-center max-w-2xl mx-auto space-y-1.5 sm:space-y-2">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">
           <Stethoscope className="w-3.5 h-3.5 text-emerald-600" />
           <span>{locale === "hi" ? "एआई फसल चिकित्सक" : "AI Crop Health Specialist"}</span>
         </div>
-        <h1 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight">
+        <h1 className="text-xl sm:text-3xl md:text-4xl font-black text-slate-900 tracking-tight break-words">
           {t("crop_doctor.title")}
         </h1>
-        <p className="text-sm sm:text-base text-slate-600">
+        <p className="text-xs sm:text-base text-slate-600">
           {t("crop_doctor.subtitle")}
         </p>
       </div>
@@ -141,7 +141,7 @@ export default function CropDoctorPage() {
       {!diagnosis ? (
         <form
           onSubmit={handleSubmit}
-          className="bg-white/95 backdrop-blur-md rounded-3xl p-6 sm:p-8 border border-emerald-100 shadow-xl space-y-6"
+          className="bg-white/95 backdrop-blur-md rounded-2xl sm:rounded-3xl p-4 sm:p-8 border border-emerald-100 shadow-xl space-y-5 sm:space-y-6 w-full min-w-0"
         >
           {/* Step 1: Image Picker */}
           <div className="space-y-2">

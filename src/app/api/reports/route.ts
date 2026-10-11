@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/admin";
 
 // In-memory cache for ultra-fast tab switching
 let cachedReports: any = null;
@@ -29,41 +29,46 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    const admin = createAdminClient();
+    let data: any[] | null = null;
+    let error: any = null;
 
-    let user: any = null;
-    try {
-      const supabase = await createClient();
-      const userRes = await withTimeout(supabase.auth.getUser(), 1200, { data: { user: null } } as any);
-      user = userRes?.data?.user;
-    } catch {
-      // Quiet fallback
-    }
+    if (isSupabaseConfigured()) {
+      const admin = createAdminClient();
 
-    let query = admin
-      .from("crop_reports")
-      .select("id, crop_key, disease_key, is_healthy, confidence, severity, diagnosis, village, created_at, user_note, image_path")
-      .order("created_at", { ascending: false })
-      .limit(limit);
-
-    if (user) {
+      let user: any = null;
       try {
-        const profileRes = await withTimeout(
-          admin.from("profiles").select("role").eq("id", user.id).single(),
-          1000,
-          { data: null } as any
-        );
-        if (profileRes?.data?.role !== "officer") {
-          query = query.eq("user_id", user.id);
-        }
+        const supabase = await createClient();
+        const userRes = await withTimeout(supabase.auth.getUser(), 1200, { data: { user: null } } as any);
+        user = userRes?.data?.user;
       } catch {
         // Quiet fallback
       }
-    }
 
-    const queryRes = await withTimeout(query, 1500, { data: null, error: new Error("timeout") } as any);
-    const data = queryRes?.data;
-    const error = queryRes?.error;
+      let query = admin
+        .from("crop_reports")
+        .select("id, crop_key, disease_key, is_healthy, confidence, severity, diagnosis, village, created_at, user_note, image_path")
+        .order("created_at", { ascending: false })
+        .limit(limit);
+
+      if (user) {
+        try {
+          const profileRes = await withTimeout(
+            admin.from("profiles").select("role").eq("id", user.id).single(),
+            1000,
+            { data: null } as any
+          );
+          if (profileRes?.data?.role !== "officer") {
+            query = query.eq("user_id", user.id);
+          }
+        } catch {
+          // Quiet fallback
+        }
+      }
+
+      const queryRes = await withTimeout(query, 1500, { data: null, error: new Error("timeout") } as any);
+      data = queryRes?.data;
+      error = queryRes?.error;
+    }
 
     if (error || !data || data.length === 0) {
       const fallbackReports = [
@@ -79,10 +84,13 @@ export async function GET(request: NextRequest) {
           user_note: "गेहूं के पत्तों पर पीले-नारंगी धब्बे हैं और हाथ में चूर्ण लग रहा है।",
           diagnosis: {
             crop_name_hi: "गेहूं (Wheat)",
+            crop_name_en: "Wheat",
             disease_name_hi: "पत्ती का रतुआ (भूरा गेरुआ)",
-            disease_name_en: "Leaf Rust (Puccinia recondita)",
+            disease_name_en: "Leaf Rust (Brown Rust)",
             treatment_hi: ["प्रोपिकोनाजोल 25% EC का 1 मिली/लीटर पानी में घोल बनाकर छिड़कें।"],
+            treatment_en: ["Spray Propiconazole 25% EC at 1 ml/litre of water."],
             organic_options_hi: ["खट्टी छाछ और हींग का छिड़काव करें।"],
+            organic_options_en: ["Spray sour buttermilk and asafoetida solution or neem oil."],
           },
         },
         {
@@ -97,10 +105,13 @@ export async function GET(request: NextRequest) {
           user_note: "पत्तियां सूख रही हैं।",
           diagnosis: {
             crop_name_hi: "गेहूं (Wheat)",
+            crop_name_en: "Wheat",
             disease_name_hi: "पत्ती का रतुआ",
             disease_name_en: "Leaf Rust",
             treatment_hi: ["समय पर फफूंदनाशक का छिड़काव करें।"],
+            treatment_en: ["Apply timely recommended fungicide spray."],
             organic_options_hi: ["नीम तेल 1500 PPM का छिड़काव करें।"],
+            organic_options_en: ["Spray Neem Oil 1500 PPM at 3-5 ml/litre."],
           },
         },
         {
@@ -115,10 +126,13 @@ export async function GET(request: NextRequest) {
           user_note: "फसल बहुत अच्छी खड़ी है।",
           diagnosis: {
             crop_name_hi: "गेहूं (Wheat)",
+            crop_name_en: "Wheat",
             disease_name_hi: "पूर्णतः स्वस्थ फसल",
-            disease_name_en: "Healthy Crop",
+            disease_name_en: "Completely Healthy Crop",
             treatment_hi: ["समय पर हल्की सिंचाई करें।"],
+            treatment_en: ["Maintain timely irrigation and balanced nutrition."],
             organic_options_hi: ["जीवामृत का प्रयोग करें।"],
+            organic_options_en: ["Apply Jeevamrit or organic compost as regular nourishment."],
           },
         },
       ];

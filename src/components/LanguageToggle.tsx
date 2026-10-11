@@ -8,14 +8,14 @@ export default function LanguageToggle() {
 
   return (
     <div
-      className="inline-flex items-center bg-slate-100 p-0.5 rounded-2xl border border-slate-200/90 shadow-inner shrink-0"
+      className="inline-flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200/90 shadow-inner shrink-0"
       role="group"
       aria-label="Language Selector"
     >
       <button
         type="button"
         onClick={() => setLocale("hi")}
-        className={`px-2 py-0.5 rounded-lg text-[11px] font-black transition-all whitespace-nowrap ${
+        className={`px-1.5 py-0.5 rounded text-[10px] font-extrabold transition-all whitespace-nowrap ${
           locale === "hi"
             ? "bg-emerald-700 text-white shadow-xs"
             : "text-slate-600 hover:text-slate-900 hover:bg-white/50"
@@ -29,7 +29,7 @@ export default function LanguageToggle() {
       <button
         type="button"
         onClick={() => setLocale("en")}
-        className={`px-2 py-0.5 rounded-lg text-[11px] font-black transition-all whitespace-nowrap ${
+        className={`px-1.5 py-0.5 rounded text-[10px] font-extrabold transition-all whitespace-nowrap ${
           locale === "en"
             ? "bg-emerald-700 text-white shadow-xs"
             : "text-slate-600 hover:text-slate-900 hover:bg-white/50"
@@ -37,7 +37,7 @@ export default function LanguageToggle() {
         id="lang-btn-en"
         title="Switch to English"
       >
-        English
+        EN
       </button>
     </div>
   );

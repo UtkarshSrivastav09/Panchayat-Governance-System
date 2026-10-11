@@ -13,6 +13,7 @@ import {
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
+import { getLocalizedCropName, getLocalizedDiseaseName } from "@/data/crops";
 
 export default function MyReportsPage() {
   const { t, locale } = useI18n();
@@ -57,12 +58,27 @@ export default function MyReportsPage() {
           }
         }
 
-        // Load Scheme applications from localStorage
+        // Load Scheme applications from /api/schemes and localStorage
         try {
+          let apiApps: any[] = [];
+          try {
+            const schemeRes = await fetch("/api/schemes");
+            if (schemeRes.ok) {
+              const sData = await schemeRes.json();
+              if (sData.applications) apiApps = sData.applications;
+            }
+          } catch {}
+
+          let localApps: any[] = [];
           const stored = localStorage.getItem("panchayat_scheme_applications");
-          if (stored) {
-            setSchemeApps(JSON.parse(stored));
-          }
+          if (stored) localApps = JSON.parse(stored);
+
+          const appMap = new Map();
+          [...localApps, ...apiApps].forEach((item) => {
+            if (!appMap.has(item.id)) appMap.set(item.id, item);
+          });
+          const combined = Array.from(appMap.values());
+          setSchemeApps(combined);
         } catch (e) {
           console.warn("Error loading stored schemes:", e);
         }
@@ -73,17 +89,30 @@ export default function MyReportsPage() {
       }
     }
     loadReports();
+
+    const handleSync = () => {
+      try {
+        const stored = localStorage.getItem("panchayat_scheme_applications");
+        if (stored) setSchemeApps(JSON.parse(stored));
+      } catch {}
+    };
+    window.addEventListener("panchayat_scheme_submitted", handleSync);
+    window.addEventListener("storage", handleSync);
+    return () => {
+      window.removeEventListener("panchayat_scheme_submitted", handleSync);
+      window.removeEventListener("storage", handleSync);
+    };
   }, []);
 
   return (
-    <div className="max-w-4xl mx-auto px-3 sm:px-6 pt-4 sm:pt-8 space-y-5 sm:space-y-6">
+    <div className="max-w-4xl mx-auto px-3 xs:px-4 sm:px-6 pt-4 sm:pt-8 space-y-4 sm:space-y-6 w-full min-w-0">
       {/* Page Header */}
       <div className="space-y-1">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">
           <FileText className="w-3.5 h-3.5 text-emerald-600" />
           <span>{locale === "hi" ? "इतिहास व रिकॉर्ड" : "History & Records"}</span>
         </div>
-        <h1 className="text-xl sm:text-3xl font-black text-slate-900 tracking-tight">
+        <h1 className="text-xl sm:text-3xl font-black text-slate-900 tracking-tight break-words">
           {t("nav.my_reports")}
         </h1>
         <p className="text-xs sm:text-sm text-slate-600">
@@ -153,7 +182,7 @@ export default function MyReportsPage() {
                         </h3>
                       </div>
                       <p className="text-xs text-slate-500 mt-1">
-                        📍 {app.applicant_name} • {app.village}, {app.district} • खतौनी: {app.khata_number} ({app.land_area})
+                        📍 {app.applicant_name} • {app.village}, {app.district} • {locale === "hi" ? "खतौनी" : "Land Record"}: {app.khata_number} ({app.land_area})
                       </p>
                     </div>
 
@@ -161,6 +190,8 @@ export default function MyReportsPage() {
                       className={`text-xs font-extrabold px-3 py-1 rounded-full border self-start sm:self-auto shrink-0 ${
                         isPending
                           ? "bg-amber-100 text-amber-900 border-amber-300"
+                          : app.status.includes("Correction") || app.status.includes("Rejected")
+                          ? "bg-rose-100 text-rose-900 border-rose-300"
                           : "bg-emerald-100 text-emerald-900 border-emerald-300"
                       }`}
                     >
@@ -168,11 +199,21 @@ export default function MyReportsPage() {
                         ? locale === "hi"
                           ? "⏳ ग्राम पंचायत स्तर पर सत्यापन चालू"
                           : "⏳ Gram Panchayat Verification in Progress"
+                        : app.status.includes("Correction") || app.status.includes("Rejected")
+                        ? locale === "hi"
+                          ? "✕ संशोधन अपेक्षित (अस्वीकृत)"
+                          : "✕ Correction Required / Rejected"
                         : locale === "hi"
                         ? "✓ कृषि अधिकारी द्वारा सत्यापित व मुख्य पोर्टल को प्रेषित"
-                        : "✓ Verified & Forwarded to Central PM-Kisan Portal"}
+                        : "✓ Verified & Forwarded to Central/State Portal"}
                     </span>
                   </div>
+
+                  {app.officer_notes && (
+                    <div className="text-xs bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-slate-700">
+                      <strong>{locale === "hi" ? "अधिकारी की टिप्पणी:" : "Officer Remarks:"}</strong> {app.officer_notes}
+                    </div>
+                  )}
 
                   <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
                     <span>
@@ -236,35 +277,47 @@ export default function MyReportsPage() {
                     </div>
 
                     <div>
-                      <div className="flex flex-wrap items-center gap-2 mb-1">
-                        <span className="font-extrabold text-slate-900 text-base sm:text-lg">
-                          {report.diagnosis?.crop_name_hi || report.crop_key}
-                        </span>
-                        <span
-                          className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${
-                            report.is_healthy
-                              ? "bg-emerald-100 text-emerald-800"
-                              : "bg-rose-100 text-rose-800"
-                          }`}
-                        >
-                          {report.is_healthy
-                            ? locale === "hi"
-                              ? "स्वस्थ फसल"
-                              : "Healthy"
-                            : report.diagnosis?.disease_name_hi || "रोगग्रस्त"}
-                        </span>
-                      </div>
+                      {(() => {
+                        const cropTitle =
+                          locale === "en"
+                            ? (report.diagnosis?.crop_name_en || getLocalizedCropName(report.crop_key, "en"))
+                            : (report.diagnosis?.crop_name_hi || getLocalizedCropName(report.crop_key, "hi"));
+                        const diseaseBadge = report.is_healthy
+                          ? (locale === "hi" ? "स्वस्थ फसल" : "Healthy Crop")
+                          : locale === "en"
+                          ? (report.diagnosis?.disease_name_en || getLocalizedDiseaseName(report.crop_key, report.disease_key, "en"))
+                          : (report.diagnosis?.disease_name_hi || getLocalizedDiseaseName(report.crop_key, report.disease_key, "hi"));
 
-                      <div className="flex items-center gap-3 text-xs text-slate-500">
-                        <span className="flex items-center gap-1">
-                          <MapPin className="w-3.5 h-3.5" />
-                          {report.village || "लखनऊ"}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Calendar className="w-3.5 h-3.5" />
-                          {new Date(report.created_at).toLocaleDateString("hi-IN")}
-                        </span>
-                      </div>
+                        return (
+                          <>
+                            <div className="flex flex-wrap items-center gap-2 mb-1">
+                              <span className="font-extrabold text-slate-900 text-base sm:text-lg">
+                                {cropTitle}
+                              </span>
+                              <span
+                                className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${
+                                  report.is_healthy
+                                    ? "bg-emerald-100 text-emerald-800"
+                                    : "bg-rose-100 text-rose-800"
+                                }`}
+                              >
+                                {diseaseBadge}
+                              </span>
+                            </div>
+
+                            <div className="flex items-center gap-3 text-xs text-slate-500">
+                              <span className="flex items-center gap-1">
+                                <MapPin className="w-3.5 h-3.5" />
+                                {report.village || (locale === "en" ? "Lucknow" : "लखनऊ")}
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <Calendar className="w-3.5 h-3.5" />
+                                {new Date(report.created_at).toLocaleDateString(locale === "en" ? "en-IN" : "hi-IN")}
+                              </span>
+                            </div>
+                          </>
+                        );
+                      })()}
                     </div>
                   </div>
 

@@ -37,9 +37,9 @@ export default function RootLayout({
             <div className="absolute inset-0 agri-grid-pattern opacity-40" />
           </div>
 
-          <div className="relative flex min-h-screen flex-col">
+          <div className="relative flex min-h-screen flex-col w-full max-w-full overflow-x-hidden">
             <Navbar />
-            <main className="flex-1 pb-24 xl:pb-10">{children}</main>
+            <main className="flex-1 w-full max-w-full min-w-0 pb-24 xl:pb-10 overflow-x-hidden">{children}</main>
           </div>
         </I18nProvider>
       </body>

@@ -79,15 +79,17 @@ export default function MandiTable({
                   <div className="text-lg font-black text-emerald-700 leading-none">
                     ₹{item.modal_price}
                   </div>
-                  <span className="text-[10px] text-slate-500 font-bold block mt-0.5">/क्विंटल</span>
+                  <span className="text-[10px] text-slate-500 font-bold block mt-0.5">
+                    {locale === "hi" ? "/क्विंटल" : "/quintal"}
+                  </span>
                 </div>
               </div>
 
               <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2 text-slate-600 font-medium text-[11px]">
-                  <span>न्यूनतम: ₹{item.min_price}</span>
+                  <span>{locale === "hi" ? "न्यूनतम:" : "Min:"} ₹{item.min_price}</span>
                   <span>|</span>
-                  <span>अधिकतम: ₹{item.max_price}</span>
+                  <span>{locale === "hi" ? "अधिकतम:" : "Max:"} ₹{item.max_price}</span>
                 </div>
 
                 <button
@@ -102,7 +104,9 @@ export default function MandiTable({
                       : "bg-slate-100 text-slate-700 hover:bg-emerald-600 hover:text-white"
                   }`}
                 >
-                  {isSelected ? "✓ चुना गया" : "कैलकुलेट करें"}
+                  {isSelected
+                    ? locale === "hi" ? "✓ चुना गया" : "✓ Selected"
+                    : locale === "hi" ? "कैलकुलेट करें" : "Calculate"}
                 </button>
               </div>
             </div>
@@ -156,7 +160,7 @@ export default function MandiTable({
                       <span className="flex items-center gap-1">
                         <MapPin className="w-3 h-3 text-slate-400" />
                         {item.district}
-                        {item.distance_km && ` (~${item.distance_km} किमी)`}
+                        {item.distance_km && ` (~${item.distance_km} ${locale === "hi" ? "किमी" : "km"})`}
                       </span>
                       <span className="flex items-center gap-1">
                         <Calendar className="w-3 h-3 text-slate-400" />
@@ -166,7 +170,7 @@ export default function MandiTable({
                   </td>
 
                   <td className="py-4 px-3 sm:px-4 text-slate-700 font-medium">
-                    {item.variety || "सामान्य"}
+                    {item.variety || (locale === "hi" ? "सामान्य" : "Common / Standard")}
                   </td>
 
                   <td className="py-4 px-3 sm:px-4 text-right text-slate-600">
@@ -177,7 +181,9 @@ export default function MandiTable({
                     <span className="text-base sm:text-lg font-black text-emerald-700">
                       ₹{item.modal_price}
                     </span>
-                    <span className="text-xs text-slate-500 block">/क्विंटल</span>
+                    <span className="text-xs text-slate-500 block">
+                      {locale === "hi" ? "/क्विंटल" : "/quintal"}
+                    </span>
                   </td>
 
                   <td className="py-4 px-3 sm:px-4 text-right text-slate-600">
@@ -197,7 +203,9 @@ export default function MandiTable({
                           : "bg-slate-100 text-slate-700 hover:bg-emerald-600 hover:text-white"
                       }`}
                     >
-                      {isSelected ? "✓ चुना गया" : "कैलकुलेट करें"}
+                      {isSelected
+                        ? locale === "hi" ? "✓ चुना गया" : "✓ Selected"
+                        : locale === "hi" ? "कैलकुलेट करें" : "Calculate"}
                     </button>
                   </td>
                 </tr>
