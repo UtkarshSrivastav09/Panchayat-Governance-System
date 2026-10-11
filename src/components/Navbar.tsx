@@ -38,14 +38,44 @@ export default function Navbar() {
 
   const isAuthPage = pathname === "/login" || pathname === "/signup";
 
-  // Core 6 Public & Farmer Services (concise labels for ideal desktop navbar fitting)
+  // Core 6 Public & Farmer Services with short mobile labels for clean fitting
   const navLinks = [
-    { href: "/dashboard", label: locale === "hi" ? "होम" : "Home", icon: Home },
-    { href: "/schemes", label: locale === "hi" ? "योजनाएं" : "Schemes", icon: Award },
-    { href: "/crop-doctor", label: locale === "hi" ? "फसल डॉक्टर" : "Crop Doctor", icon: Stethoscope },
-    { href: "/outbreaks", label: locale === "hi" ? "अलर्ट रडार" : "Alerts", icon: Map },
-    { href: "/village-development", label: locale === "hi" ? "ग्राम विकास" : "Village Works", icon: Building2 },
-    { href: "/mandi", label: locale === "hi" ? "मंडी भाव" : "Mandi Rates", icon: BadgePercent },
+    {
+      href: "/dashboard",
+      label: locale === "hi" ? "होम" : "Home",
+      shortLabel: locale === "hi" ? "होम" : "Home",
+      icon: Home,
+    },
+    {
+      href: "/schemes",
+      label: locale === "hi" ? "योजनाएं" : "Schemes",
+      shortLabel: locale === "hi" ? "योजना" : "Schemes",
+      icon: Award,
+    },
+    {
+      href: "/crop-doctor",
+      label: locale === "hi" ? "फसल डॉक्टर" : "Crop Doctor",
+      shortLabel: locale === "hi" ? "डॉक्टर" : "Doctor",
+      icon: Stethoscope,
+    },
+    {
+      href: "/outbreaks",
+      label: locale === "hi" ? "अलर्ट रडार" : "Alerts",
+      shortLabel: locale === "hi" ? "अलर्ट" : "Alerts",
+      icon: Map,
+    },
+    {
+      href: "/village-development",
+      label: locale === "hi" ? "ग्राम विकास" : "Village Works",
+      shortLabel: locale === "hi" ? "विकास" : "Works",
+      icon: Building2,
+    },
+    {
+      href: "/mandi",
+      label: locale === "hi" ? "मंडी भाव" : "Mandi Rates",
+      shortLabel: locale === "hi" ? "मंडी" : "Mandi",
+      icon: BadgePercent,
+    },
   ];
 
   // First letter of user's name for avatar
@@ -53,25 +83,25 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Top Main Navigation Bar */}
+      {/* Top Main Navigation Bar - Ultra-compact on mobile & short screens */}
       <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-emerald-100 shadow-xs transition-all">
-        <div className="w-full max-w-[1600px] mx-auto px-2 sm:px-4 h-14 sm:h-16 flex items-center justify-between gap-1.5 sm:gap-2">
+        <div className="w-full max-w-[1600px] mx-auto px-2 sm:px-4 h-12 sm:h-14 flex items-center justify-between gap-1 sm:gap-2">
           
           {/* Left: Brand Identity (GramSetu) */}
           <Link
             href={currentUser ? (currentUser.role === "officer" ? "/officer" : "/dashboard") : "/dashboard"}
-            className="flex items-center gap-1.5 group shrink-0 min-w-fit"
+            className="flex items-center gap-1.5 group shrink-0"
             title="GramSetu - Smart Panchayat Portal"
           >
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-tr from-emerald-700 via-emerald-600 to-teal-500 text-white flex items-center justify-center font-black text-sm shadow-xs group-hover:scale-105 transition-all shrink-0">
+            <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-gradient-to-tr from-emerald-700 via-emerald-600 to-teal-500 text-white flex items-center justify-center font-black text-xs sm:text-sm shadow-xs group-hover:scale-105 transition-all shrink-0">
               🌾
             </div>
             <div className="flex flex-col justify-center shrink-0">
               <div className="flex items-center gap-1 leading-none">
-                <span className="font-black text-sm sm:text-base text-slate-900 tracking-tight whitespace-nowrap">
+                <span className="font-black text-xs sm:text-sm md:text-base text-slate-900 tracking-tight whitespace-nowrap">
                   Gram<span className="text-emerald-600 font-black">Setu</span>
                 </span>
-                <span className="inline-flex items-center px-1 py-0.2 rounded-full text-[8px] font-black bg-emerald-100 text-emerald-800 border border-emerald-200 uppercase tracking-wider">
+                <span className="hidden xs:inline-flex items-center px-1 py-0.2 rounded-full text-[7.5px] sm:text-[8px] font-black bg-emerald-100 text-emerald-800 border border-emerald-200 uppercase tracking-wider">
                   Live
                 </span>
               </div>
@@ -81,7 +111,7 @@ export default function Navbar() {
             </div>
           </Link>
 
-          {/* Center: Desktop Navigation Pills (Ultra-compact so it fits on any screen size) */}
+          {/* Center: Desktop Navigation Pills */}
           {!isAuthPage && (
             <nav className="hidden lg:flex items-center gap-0.5 bg-slate-100/90 p-0.5 rounded-xl border border-slate-200/80 shadow-inner shrink-0">
               {navLinks.map((item) => {
@@ -106,9 +136,9 @@ export default function Navbar() {
             </nav>
           )}
 
-          {/* Right: Actions (Roadmap Symbol Button, Language Switcher, User Profile & Log Out) */}
+          {/* Right: Actions (Roadmap Button, Language Switcher, User Profile & Log Out) */}
           <div className="flex items-center gap-1 sm:gap-1.5 shrink-0 ml-auto">
-            {/* Dedicated Roadmap Symbol Button */}
+            {/* Dedicated Roadmap Button - Icon-only on mobile, icon+text on tablet/desktop */}
             {!isAuthPage && (
               <Link
                 href="/roadmap"
@@ -121,7 +151,7 @@ export default function Navbar() {
                 title={locale === "hi" ? "रोडमैप (Roadmap) देखें" : "View Development Roadmap"}
               >
                 <Compass className={`w-3.5 h-3.5 transition-transform group-hover:rotate-45 shrink-0 ${pathname === "/roadmap" ? "text-white" : "text-emerald-700"}`} />
-                <span className="whitespace-nowrap font-extrabold">{locale === "hi" ? "रोडमैप" : "Roadmap"}</span>
+                <span className="hidden sm:inline whitespace-nowrap font-extrabold">{locale === "hi" ? "रोडमैप" : "Roadmap"}</span>
               </Link>
             )}
 
@@ -145,7 +175,7 @@ export default function Navbar() {
               <div className="flex items-center gap-1 bg-slate-50 border border-slate-200/90 rounded-lg sm:rounded-xl p-0.5 sm:p-1 shadow-xs shrink-0">
                 {/* User Avatar */}
                 <div
-                  className={`w-6 h-6 sm:w-7 sm:h-7 rounded-md sm:rounded-lg flex items-center justify-center text-white font-black text-[11px] shadow-xs shrink-0 ${
+                  className={`w-6 h-6 sm:w-7 sm:h-7 rounded-md sm:rounded-lg flex items-center justify-center text-white font-black text-[10px] sm:text-[11px] shadow-xs shrink-0 ${
                     currentUser.role === "officer"
                       ? "bg-gradient-to-tr from-amber-600 to-orange-500"
                       : "bg-gradient-to-tr from-emerald-600 to-teal-500"
@@ -155,8 +185,8 @@ export default function Navbar() {
                   {userInitial}
                 </div>
                 
-                {/* Full Name & Role */}
-                <div className="flex flex-col text-left shrink-0 max-w-[85px] sm:max-w-[110px] px-0.5">
+                {/* Full Name & Role - Shown on sm: and up to save mobile space */}
+                <div className="hidden sm:flex flex-col text-left shrink-0 max-w-[85px] sm:max-w-[110px] px-0.5">
                   <span className="font-extrabold text-[11px] text-slate-900 leading-tight truncate">
                     {currentUser.full_name}
                   </span>
@@ -173,8 +203,8 @@ export default function Navbar() {
                   </span>
                 </div>
 
-                {/* Subtle Divider */}
-                <div className="h-3.5 sm:h-4 w-px bg-slate-200 shrink-0 mx-0.5" />
+                {/* Subtle Divider (hidden on mobile when name hidden) */}
+                <div className="hidden sm:block h-3.5 sm:h-4 w-px bg-slate-200 shrink-0 mx-0.5" />
 
                 {/* Distinct Logout Button */}
                 <button
@@ -197,7 +227,7 @@ export default function Navbar() {
                 className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-black bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm transition-all active:scale-95 shrink-0 whitespace-nowrap"
               >
                 <User className="w-3.5 h-3.5 shrink-0" />
-                <span className="whitespace-nowrap">
+                <span className="hidden xs:inline whitespace-nowrap">
                   {locale === "hi" ? "लॉगिन" : "Sign In"}
                 </span>
               </Link>
@@ -210,35 +240,47 @@ export default function Navbar() {
       {!isAuthPage && (
         <nav
           aria-label="Mobile Navigation"
-          className="lg:hidden fixed bottom-1.5 sm:bottom-3 left-1.5 sm:left-3 right-1.5 sm:right-3 z-40 bg-white/95 backdrop-blur-xl border border-emerald-200/80 shadow-2xl rounded-2xl py-1 px-1 flex items-center justify-around"
+          className="lg:hidden fixed bottom-1.5 inset-x-1.5 sm:bottom-3 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 sm:w-full sm:max-w-md z-40 bg-white/95 backdrop-blur-xl border border-emerald-200/90 shadow-[0_8px_30px_rgba(0,0,0,0.12)] rounded-2xl p-1"
         >
-          {navLinks.map((item) => {
-            const Icon = item.icon;
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                prefetch={true}
-                className={`flex flex-col items-center justify-center py-1 px-1 rounded-xl min-h-[42px] min-w-[44px] transition-all shrink-0 ${
-                  isActive
-                    ? "text-emerald-800 font-black scale-105"
-                    : "text-slate-500 font-semibold hover:text-emerald-700"
-                }`}
-              >
-                <div
-                  className={`p-1 rounded-lg transition-colors ${
-                    isActive ? "bg-emerald-100 text-emerald-800 shadow-xs" : ""
+          <div className="grid grid-cols-6 items-stretch gap-0.5 sm:gap-1">
+            {navLinks.map((item) => {
+              const Icon = item.icon;
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  prefetch={true}
+                  className={`relative flex flex-col items-center justify-center py-1 sm:py-1.5 px-0.5 rounded-xl transition-all duration-200 active:scale-95 select-none ${
+                    isActive
+                      ? "bg-emerald-600 text-white shadow-sm shadow-emerald-700/30 -translate-y-0.5"
+                      : "text-slate-500 hover:text-emerald-700 hover:bg-emerald-50/60"
                   }`}
                 >
-                  <Icon className="w-3.5 h-3.5 xs:w-4 xs:h-4 shrink-0" />
-                </div>
-                <span className="text-[9px] xs:text-[10px] mt-0.5 tracking-tight text-center font-bold truncate max-w-[50px] leading-tight">
-                  {item.label}
-                </span>
-              </Link>
-            );
-          })}
+                  {/* Subtle active top indicator dot */}
+                  {isActive && (
+                    <span className="absolute -top-0.5 w-1.5 h-1.5 rounded-full bg-amber-300 ring-1 ring-white shadow-xs" />
+                  )}
+
+                  <div className="flex items-center justify-center">
+                    <Icon
+                      className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 transition-transform ${
+                        isActive ? "text-white scale-110" : "text-slate-500"
+                      }`}
+                    />
+                  </div>
+
+                  <span
+                    className={`text-[9.5px] sm:text-[10px] mt-0.5 tracking-tight text-center font-extrabold leading-none truncate w-full ${
+                      isActive ? "text-white font-black" : "text-slate-600"
+                    }`}
+                  >
+                    {item.shortLabel}
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
         </nav>
       )}
     </>
