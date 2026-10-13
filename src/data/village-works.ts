@@ -1317,34 +1317,115 @@ const AUDIT_STATUS_POOL = [
 ];
 
 const DISTRICT_COORDS_MAP: { [dist: string]: { lat: number; lng: number } } = {
+  // Uttar Pradesh
   "Lucknow": { lat: 26.8467, lng: 80.9462 },
   "Sitapur": { lat: 27.5756, lng: 80.6829 },
   "Barabanki": { lat: 26.9272, lng: 81.1842 },
   "Varanasi": { lat: 25.3176, lng: 82.9739 },
+  "Ayodhya": { lat: 26.7922, lng: 82.1998 },
+  "Prayagraj": { lat: 25.4358, lng: 81.8463 },
+  "Gorakhpur": { lat: 26.7606, lng: 83.3732 },
+  "Hardoi": { lat: 27.3957, lng: 80.1312 },
+  "Unnao": { lat: 26.5393, lng: 80.4878 },
+  // Bihar
   "Patna": { lat: 25.5941, lng: 85.1376 },
   "Gaya": { lat: 24.7914, lng: 85.0002 },
   "Muzaffarpur": { lat: 26.1209, lng: 85.3647 },
+  "Bhagalpur": { lat: 25.2425, lng: 86.9842 },
+  "Nalanda": { lat: 25.1982, lng: 85.5186 },
+  // Madhya Pradesh
   "Bhopal": { lat: 23.2599, lng: 77.4126 },
   "Indore": { lat: 22.7196, lng: 75.8577 },
   "Ujjain": { lat: 23.1765, lng: 75.7885 },
+  // Rajasthan
   "Jaipur": { lat: 26.9124, lng: 75.7873 },
   "Jodhpur": { lat: 26.2389, lng: 73.0243 },
   "Udaipur": { lat: 24.5854, lng: 73.7125 },
+  // Punjab & Haryana
   "Ludhiana": { lat: 30.9010, lng: 75.8573 },
   "Amritsar": { lat: 31.6340, lng: 74.8723 },
   "Karnal": { lat: 29.6857, lng: 76.9905 },
   "Hisar": { lat: 29.1492, lng: 75.7217 },
+  // Maharashtra
   "Pune": { lat: 18.5204, lng: 73.8567 },
   "Nashik": { lat: 19.9975, lng: 73.7898 },
   "Nagpur": { lat: 21.1458, lng: 79.0882 },
+  // Gujarat
   "Ahmedabad": { lat: 23.0225, lng: 72.5714 },
   "Surat": { lat: 21.1702, lng: 72.8311 },
   "Vadodara": { lat: 22.3072, lng: 73.1812 },
+  // West Bengal
   "Hooghly": { lat: 22.9034, lng: 88.3965 },
   "Nadia": { lat: 23.4710, lng: 88.5565 },
+  // Karnataka
   "Mandya": { lat: 12.5238, lng: 76.8967 },
   "Mysuru": { lat: 12.2958, lng: 76.6394 },
 };
+
+// English transliteration dictionary for Indian villages & districts
+export function toEnglishPlaceName(name: string): string {
+  if (!name) return "";
+  const trimmed = name.trim();
+  const knownMap: Record<string, string> = {
+    "बड़ा भरवांरा": "Bada Bharwara",
+    "बड़ा भरवारा": "Bada Bharwara",
+    "भरवांरा": "Bharwara",
+    "मलिहाबाद खास": "Malihabad Khas",
+    "मलिहाबाद": "Malihabad",
+    "लखनऊ": "Lucknow",
+    "उत्तर प्रदेश": "Uttar Pradesh",
+    "ससपन": "Saspan",
+    "नवीपनाह": "Nabipanah",
+    "कसमंडी कलां": "Kasmandi Kalan",
+    "भातावन": "Bhatawan",
+    "मिर्जापुर": "Mirzapur",
+    "काकोरी देहात": "Kakori Dehat",
+    "दशहरी": "Dashahari",
+    "जलालपुर": "Jalalpur",
+    "कुशहरी": "Kushehari",
+    "भातगांव": "Bhatgaon",
+    "कठवारा": "Kathwara",
+    "इटौंजा": "Itaunja",
+    "महोना": "Mahona",
+    "इंदारा": "Indara",
+    "बरगदी मगठ": "Bargadi Magath",
+    "मोहनलालगंज देहात": "Mohanlalganj Dehat",
+    "जबरौली": "Jabrauli",
+    "निगोहां": "Nigohan",
+    "सिसेंडी": "Sisendi",
+    "हुलास खेड़ा": "Hulas Khera",
+    "जुग्गौर": "Juggaur",
+    "सेमरा": "Semra",
+    "उतरधौना": "Uattardhona",
+    "मतियारी देहात": "Matiyari Dehat",
+    "गौरी": "Gauri",
+    "नटकुर": "Natkur",
+    "पीपरसंड": "Piparsand",
+    "बंथरा सिकंदरपुर": "Banthra Sikanderpur",
+    "गोसाईंगंज ग्रामीण": "Gosainganj Rural",
+    "अमेठी देहात": "Amethi Dehat",
+    "महुआकलां": "Mahuakalan",
+  };
+
+  if (knownMap[trimmed]) return knownMap[trimmed];
+
+  // If already English letters
+  if (/^[A-Za-z0-9\s,.\-()]+$/.test(trimmed)) return trimmed;
+
+  return trimmed
+    .replace(/बड़ा/g, "Bada")
+    .replace(/छोटा/g, "Chhota")
+    .replace(/भरवांरा/g, "Bharwara")
+    .replace(/भरवारा/g, "Bharwara")
+    .replace(/खास/g, "Khas")
+    .replace(/कलां/g, "Kalan")
+    .replace(/खुर्द/g, "Khurd")
+    .replace(/देहात/g, "Dehat")
+    .replace(/ग्रामीण/g, "Rural")
+    .replace(/उत्तर प्रदेश/g, "Uttar Pradesh")
+    .replace(/लखनऊ/g, "Lucknow")
+    .replace(/मलिहाबाद/g, "Malihabad");
+}
 
 // Helper to generate dynamic, authentic, localized public works for ANY selected village in India
 export function getVillageProjectsForLocation(
@@ -1379,8 +1460,20 @@ export function getVillageProjectsForLocation(
   const startIdx = hash % WORK_TEMPLATES.length;
 
   const baseCoord = DISTRICT_COORDS_MAP[district] || { lat: 26.85, lng: 80.90 };
+  const bHash = djb2Hash(block);
+  const vHash = djb2Hash(village);
+
+  // Deterministic geographic offset (~3-8 km) so every village and block has distinct satellite coordinates
+  const blockLatShift = (((bHash % 60) - 30) / 1000);
+  const blockLngShift = (((bHash % 60) - 30) / 1000);
+  const villageLatShift = (((vHash % 40) - 20) / 2000);
+  const villageLngShift = (((vHash % 40) - 20) / 2000);
+
+  const villageLat = Number((baseCoord.lat + blockLatShift + villageLatShift).toFixed(4));
+  const villageLng = Number((baseCoord.lng + blockLngShift + villageLngShift).toFixed(4));
 
   const projects: VillageWorkProject[] = [];
+  const enVillage = toEnglishPlaceName(village);
 
   for (let i = 0; i < projectCount; i++) {
     const tplIdx = (startIdx + i * step) % WORK_TEMPLATES.length;
@@ -1412,11 +1505,11 @@ export function getVillageProjectsForLocation(
     const cMonth = compMonths[(hash + i * 2) % compMonths.length];
     const expected_completion = `2026-${cMonth}-28`;
 
-    // Coordinates with natural micro-offset
-    const latOffset = (((hash + i * 79) % 200) - 100) / 10000;
-    const lngOffset = (((hash + i * 97) % 200) - 100) / 10000;
-    const lat = Number((baseCoord.lat + latOffset).toFixed(4));
-    const lng = Number((baseCoord.lng + lngOffset).toFixed(4));
+    // Coordinates with fine-tuned micro-offset per project inside village
+    const latOffset = (((hash + i * 79) % 100) - 50) / 20000;
+    const lngOffset = (((hash + i * 97) % 100) - 50) / 20000;
+    const lat = Number((villageLat + latOffset).toFixed(4));
+    const lng = Number((villageLng + lngOffset).toFixed(4));
 
     const contractor = CONTRACTORS_POOL[(hash + i) % CONTRACTORS_POOL.length];
     const audit = AUDIT_STATUS_POOL[(hash + i * 2) % AUDIT_STATUS_POOL.length];
@@ -1430,9 +1523,9 @@ export function getVillageProjectsForLocation(
       block,
       village,
       title_hi: tpl.title_hi(village),
-      title_en: tpl.title_en(village),
+      title_en: tpl.title_en(enVillage),
       description_hi: tpl.desc_hi(village),
-      description_en: tpl.desc_en(village),
+      description_en: tpl.desc_en(enVillage),
       category: tpl.category,
       scheme_fund_hi: tpl.scheme_hi,
       scheme_fund_en: tpl.scheme_en,

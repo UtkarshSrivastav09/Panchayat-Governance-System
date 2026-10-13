@@ -1,68 +1,28 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function updateSession(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
+  const supabaseResponse = NextResponse.next({
     request,
   });
 
   const pathname = request.nextUrl.pathname;
 
-  // Extract session from cookie (instant sub-millisecond check)
+  // Extract session from cookie (instant sub-millisecond edge check)
   const sessionCookie =
     request.cookies.get("gram_sahayak_session")?.value ||
-    request.cookies.get("demo_user")?.value;
+    request.cookies.get("demo_user")?.value ||
+    request.cookies.get("sb-access-token")?.value;
 
   let sessionUser: any = null;
   if (sessionCookie) {
     try {
       sessionUser = JSON.parse(decodeURIComponent(sessionCookie));
     } catch {
-      sessionUser = null;
+      sessionUser = sessionCookie ? { token: sessionCookie } : null;
     }
   }
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  const isSupabaseLive = Boolean(
-    supabaseUrl &&
-    !supabaseUrl.includes("placeholder") &&
-    !supabaseUrl.includes("example.com") &&
-    supabaseAnonKey &&
-    !supabaseAnonKey.includes("placeholder")
-  );
-
-  let supabaseUser = null;
-  // If sessionUser is already known, avoid expensive remote auth network roundtrips
-  if (!sessionUser && isSupabaseLive) {
-    try {
-      const { createServerClient } = await import("@supabase/ssr");
-      const supabase = createServerClient(supabaseUrl!, supabaseAnonKey!, {
-        cookies: {
-          getAll() {
-            return request.cookies.getAll();
-          },
-          setAll(cookiesToSet: any[]) {
-            cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
-            supabaseResponse = NextResponse.next({
-              request,
-            });
-            cookiesToSet.forEach(({ name, value, options }) =>
-              supabaseResponse.cookies.set(name, value, options)
-            );
-          },
-        },
-      });
-
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      supabaseUser = user;
-    } catch {
-      // Offline or network error
-    }
-  }
-
-  const isAuthenticated = Boolean(sessionUser || supabaseUser);
+  const isAuthenticated = Boolean(sessionUser);
 
   // If user opens root '/', directly redirect to login (or dashboard/officer if logged in)
   if (pathname === "/") {
@@ -90,11 +50,6 @@ export async function updateSession(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
-  }
-
-  // Prevent logged-in users from seeing login/signup unless they explicitly log out
-  if ((pathname === "/login" || pathname === "/signup") && isAuthenticated) {
-    // Note: We allow them to stay if they want, but if already logged in they can be redirected or allowed
   }
 
   return supabaseResponse;

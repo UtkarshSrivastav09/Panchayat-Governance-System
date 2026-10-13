@@ -34,13 +34,15 @@ import {
   Video,
   Pill,
   Heart,
+  Satellite,
 } from "lucide-react";
 
 import { getUserSession, UserProfile } from "@/lib/auth-storage";
 import { GOVT_SCHEMES, GovtScheme } from "@/data/schemes";
 import SchemeApplicationModal from "@/components/SchemeApplicationModal";
+import SatelliteAuditModal from "@/components/SatelliteAuditModal";
 import { getLocalizedCropName, getLocalizedDiseaseName } from "@/data/crops";
-import { getPanchayatSignatories } from "@/data/village-works";
+import { getPanchayatSignatories, getVillageProjectsForLocation, VillageWorkProject } from "@/data/village-works";
 
 export default function DashboardPage() {
   const { t, locale } = useI18n();
@@ -49,6 +51,7 @@ export default function DashboardPage() {
   const [alerts, setAlerts] = useState<OutbreakAlertItem[]>([]);
   const [recentReports, setRecentReports] = useState<any[]>([]);
   const [selectedSchemeForModal, setSelectedSchemeForModal] = useState<GovtScheme | null>(null);
+  const [selectedProjectForSatellite, setSelectedProjectForSatellite] = useState<VillageWorkProject | null>(null);
   const [weather, setWeather] = useState<{
     temp: number;
     humidity: number;
@@ -137,6 +140,42 @@ export default function DashboardPage() {
       }
     }
     loadData();
+
+    // Listen for live GPS location updates from LocationPromptModal
+    const handleLocationUpdate = async (e: Event) => {
+      const customEvent = e as CustomEvent<{
+        village: string;
+        district: string;
+        state: string;
+        lat: number;
+        lng: number;
+      }>;
+      const detail = customEvent.detail;
+      if (detail) {
+        setCurrentUser((prev) =>
+          prev
+            ? { ...prev, village: detail.village, district: detail.district, state: detail.state }
+            : null
+        );
+
+        // Fetch real-time weather for exact user coordinates
+        try {
+          const wRes = await fetch(`/api/weather?lat=${detail.lat}&lng=${detail.lng}`);
+          if (wRes.ok) {
+            const wData = await wRes.json();
+            setWeather(wData);
+            try {
+              sessionStorage.setItem("sp_cached_weather", JSON.stringify(wData));
+            } catch {}
+          }
+        } catch {}
+      }
+    };
+
+    window.addEventListener("gramsetu-location-updated", handleLocationUpdate);
+    return () => {
+      window.removeEventListener("gramsetu-location-updated", handleLocationUpdate);
+    };
   }, [router]);
 
   const userVillage = currentUser?.village || "Malihabad Khas";
@@ -236,7 +275,7 @@ export default function DashboardPage() {
           </span>
         </div>
 
-        <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4">
+        <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4">
           {/* Card 1: Crop Doctor */}
           <Link
             href="/crop-doctor"
@@ -396,6 +435,43 @@ export default function DashboardPage() {
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
             </div>
           </Link>
+
+          {/* Card 6: ISRO Bhuvan Satellite & AI Geo-Audit */}
+          <button
+            type="button"
+            onClick={() => {
+              const projs = getVillageProjectsForLocation(userState, userDistrict, "Malihabad", userVillage);
+              if (projs.length > 0) setSelectedProjectForSatellite(projs[0]);
+              else router.push("/village-development?audit=live");
+            }}
+            className="group relative bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 border-2 border-indigo-100 shadow-sm hover:shadow-xl hover:border-indigo-500 transition-all flex flex-col justify-between active:scale-[0.99] text-left cursor-pointer"
+          >
+            <div className="space-y-2.5 sm:space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-slate-900 via-indigo-950 to-slate-900 text-cyan-300 flex items-center justify-center font-bold shadow-md group-hover:scale-110 transition-transform">
+                  <Satellite className="w-5 h-5 animate-pulse" />
+                </div>
+                <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-wider bg-indigo-100 text-indigo-900 px-2 py-0.5 rounded-full">
+                  ISRO Bhuvan
+                </span>
+              </div>
+              <div>
+                <h3 className="text-sm sm:text-base font-black text-slate-900 group-hover:text-indigo-700 transition-colors">
+                  {locale === "hi" ? "उपग्रह व AI ऑडिट" : "Satellite Geo-Audit"}
+                </h3>
+                <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">
+                  {locale === "hi"
+                    ? "सड़क व नाली का लाइव उपग्रह दृश्य, 3-चरणीय फोटो व AI सत्यापन।"
+                    : "Live high-res satellite GIS view & AI anti-corruption photo audit."}
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-3.5 sm:mt-5 pt-2.5 sm:pt-3 border-t border-slate-100 flex items-center justify-between text-indigo-700 font-extrabold text-xs">
+              <span>{locale === "hi" ? "ऑडिट खोलें →" : "Open Audit →"}</span>
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </button>
         </div>
       </div>
 
@@ -775,6 +851,102 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      {/* 4.6. ISRO Bhuvan Satellite & AI Geo-Audit 360° Feature Spotlight (Directly Below Village Works) */}
+      <div className="bg-gradient-to-r from-slate-950 via-indigo-950 to-slate-900 rounded-2xl sm:rounded-3xl p-4 sm:p-7 border-2 border-cyan-500/40 shadow-2xl relative overflow-hidden space-y-4 sm:space-y-5 text-white">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -left-10 -bottom-10 w-80 h-80 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none" />
+
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4 border-b border-white/10 pb-4">
+          <div className="space-y-1 sm:space-y-1.5">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-[10px] font-black uppercase tracking-wider bg-cyan-400 text-slate-950 px-2.5 py-0.5 rounded-full shadow-xs flex items-center gap-1">
+                🛰️ {locale === "hi" ? "ISRO भुवन • 360° उपग्रह व AI सत्यापन" : "ISRO Bhuvan • 360° Satellite & AI Audit"}
+              </span>
+              <span className="text-[11px] font-bold text-cyan-200 flex items-center gap-1 bg-white/10 px-2 py-0.5 rounded-full">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                {locale === "hi" ? "लाइव उपग्रह ऑर्थो-इमेजरी सक्रिय" : "Live High-Res Satellite Feed Active"}
+              </span>
+            </div>
+
+            <h3 className="text-lg sm:text-2xl font-black text-white mt-1 flex items-center gap-2">
+              <Satellite className="w-5 h-5 sm:w-6 sm:h-6 text-cyan-400 shrink-0" />
+              <span>
+                {locale === "hi"
+                  ? "ग्राम निर्माण उपग्रह सत्यापन एवं एंटी-करप्शन फोटो टाइमलाइन"
+                  : "Satellite Infrastructure Audit & Anti-Corruption Photo Timeline"}
+              </span>
+            </h3>
+            <p className="text-xs sm:text-sm text-cyan-100/80 font-medium max-w-2xl leading-relaxed">
+              {locale === "hi"
+                ? "अंतरिक्ष से लाइव उपग्रह दृश्य, पंचायती राज mActionSoft 3-चरणीय फोटो (कार्य से पूर्व, प्रगति पर, कार्य पूर्ण) और Groq Vision AI द्वारा निर्माण गुणवत्ता सत्यापन।"
+                : "Live satellite GIS aerial view, mActionSoft 3-stage photographic timeline (Before, During, Completed), and Groq Vision AI engineering certification."}
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => {
+              const projs = getVillageProjectsForLocation(userState, userDistrict, "Malihabad", userVillage);
+              if (projs.length > 0) setSelectedProjectForSatellite(projs[0]);
+              else router.push("/village-development?audit=live");
+            }}
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl sm:rounded-2xl bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-slate-950 font-black text-xs sm:text-sm shadow-xl transition-all shrink-0 active:scale-95 group self-start md:self-auto cursor-pointer"
+          >
+            <Satellite className="w-4 h-4 text-slate-950 group-hover:rotate-45 transition-transform" />
+            <span>{locale === "hi" ? "लाइव उपग्रह व फोटो प्रमाण खोलें →" : "Launch Satellite & Photo Proof →"}</span>
+          </button>
+        </div>
+
+        {/* 3 Quick Preview Feature Tiles */}
+        <div className="relative z-10 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3.5 border border-white/15 space-y-1.5">
+            <div className="text-[10px] font-bold text-cyan-300 uppercase tracking-wider flex items-center gap-1">
+              <span>🛰️</span>
+              <span>{locale === "hi" ? "0.5m हाई-रिज़ॉल्यूशन उपग्रह" : "0.5m High-Res Satellite"}</span>
+            </div>
+            <div className="text-sm font-black text-white">
+              {currentUser?.village || (locale === "hi" ? "मलिहाबाद" : "Malihabad")}, {currentUser?.district || (locale === "hi" ? "लखनऊ" : "Lucknow")}
+            </div>
+            <p className="text-[11px] text-slate-300">
+              {locale === "hi"
+                ? "गांव के किसी भी खड़ंजे, नाली या पुलिया का उपग्रह से सीधा निरीक्षण।"
+                : "Real-time GIS aerial view zoomed right into your village road or drain."}
+            </p>
+          </div>
+
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3.5 border border-white/15 space-y-1.5">
+            <div className="text-[10px] font-bold text-emerald-300 uppercase tracking-wider flex items-center gap-1">
+              <span>📸</span>
+              <span>{locale === "hi" ? "mActionSoft 3-चरणीय फोटो" : "mActionSoft 3-Stage Proof"}</span>
+            </div>
+            <div className="text-sm font-black text-white">
+              {locale === "hi" ? "कार्य पूर्व • निर्माण काल • पूर्ण" : "Before • In-Progress • Done"}
+            </div>
+            <p className="text-[11px] text-slate-300">
+              {locale === "hi"
+                ? "असली तारीख व GPS मुहर के साथ 3-स्तरीय फोटो प्रमाण ताकि कोई फर्जीवाड़ा न हो।"
+                : "Tamper-proof date & GPS stamped photos ensuring zero fund fraud."}
+            </p>
+          </div>
+
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3.5 border border-white/15 space-y-1.5">
+            <div className="text-[10px] font-bold text-amber-300 uppercase tracking-wider flex items-center gap-1">
+              <span>🤖</span>
+              <span>{locale === "hi" ? "Groq Vision AI जेई रिपोर्ट" : "Groq Vision AI Audit"}</span>
+            </div>
+            <div className="text-sm font-black text-emerald-400 flex items-center gap-1">
+              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+              <span>94% PWD Standard Passed</span>
+            </div>
+            <p className="text-[11px] text-slate-300">
+              {locale === "hi"
+                ? "2 सेकंड में दरार, गुणवत्ता व भुगतान हेतु आधिकारिक डिजिटल प्रमाण-पत्र।"
+                : "Instant AI defect radar and government certificate download."}
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* 4.5 e-Sanjeevani Tele-Doctor & Rural Healthcare Section (Directly Below Village Works) */}
       <div className="bg-gradient-to-r from-teal-950 via-teal-900 to-slate-900 rounded-2xl sm:rounded-3xl p-4 sm:p-7 border border-teal-500/30 shadow-xl relative overflow-hidden space-y-4 sm:space-y-5">
         <div className="absolute top-0 right-0 w-80 h-80 bg-teal-400/10 rounded-full blur-3xl pointer-events-none" />
@@ -1067,6 +1239,14 @@ export default function DashboardPage() {
           scheme={selectedSchemeForModal}
           currentUser={currentUser}
           onClose={() => setSelectedSchemeForModal(null)}
+        />
+      )}
+
+      {/* ISRO Bhuvan Satellite & AI Geo-Audit Modal */}
+      {selectedProjectForSatellite && (
+        <SatelliteAuditModal
+          project={selectedProjectForSatellite}
+          onClose={() => setSelectedProjectForSatellite(null)}
         />
       )}
 

@@ -13,6 +13,7 @@ import {
   getPanchayatSignatories,
   getVillageProjectsForLocation,
   PanchayatSignatories,
+  toEnglishPlaceName,
 } from "@/data/village-works";
 import {
   Building2,
@@ -42,7 +43,9 @@ import {
   Droplets,
   Sun,
   Hammer,
+  Satellite,
 } from "lucide-react";
+import SatelliteAuditModal from "@/components/SatelliteAuditModal";
 
 type ProjectCategory = "all" | "road" | "solar" | "drainage" | "water" | "community";
 type StatusFilter = "all" | "in_progress" | "completed" | "sanctioned";
@@ -74,6 +77,7 @@ export default function VillageDevelopmentPage() {
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedProjectForGrievance, setSelectedProjectForGrievance] = useState<VillageWorkProject | null>(null);
   const [selectedProjectForDoc, setSelectedProjectForDoc] = useState<VillageWorkProject | null>(null);
+  const [selectedProjectForSatellite, setSelectedProjectForSatellite] = useState<VillageWorkProject | null>(null);
 
   // Grievance Form State
   const [citizenName, setCitizenName] = useState<string>("");
@@ -104,6 +108,12 @@ export default function VillageDevelopmentPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.location.search.includes("audit=live") && projects.length > 0) {
+      setSelectedProjectForSatellite(projects[0]);
+    }
+  }, [projects]);
 
   useEffect(() => {
     const user = getUserSession();
@@ -220,19 +230,19 @@ export default function VillageDevelopmentPage() {
   return (
     <div className="max-w-7xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 pb-24 sm:pb-20 space-y-5 sm:space-y-8 w-full min-w-0">
       
-      {/* 1. Header Banner with e-GramSwaraj Badge */}
-      <div className="bg-gradient-to-r from-emerald-950 via-emerald-900 to-teal-950 rounded-2xl sm:rounded-3xl p-5 sm:p-8 lg:p-10 text-white shadow-xl relative overflow-hidden border border-emerald-800">
-        <div className="absolute -right-10 -bottom-10 w-96 h-96 bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute right-1/4 -top-10 w-72 h-72 bg-emerald-500/15 rounded-full blur-2xl pointer-events-none" />
-
-        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+      {/* 1. Header Banner with Official Government Portal Design */}
+      <div className="bg-slate-900 rounded-2xl sm:rounded-3xl text-white shadow-xl relative overflow-hidden border border-slate-800">
+        {/* National Tricolor Accent Strip */}
+        <div className="h-1.5 w-full bg-gradient-to-r from-amber-500 via-white to-emerald-600" />
+        
+        <div className="p-5 sm:p-8 lg:p-10 relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="space-y-2.5 max-w-3xl">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-[10px] sm:text-xs uppercase tracking-wider font-black bg-amber-400 text-slate-950 px-3 py-1 rounded-full shadow-md flex items-center gap-1.5">
-                🏛️ {locale === "hi" ? "पंचायती राज मंत्रालय (e-GramSwaraj)" : "Ministry of Panchayati Raj"}
+              <span className="text-[10px] sm:text-xs uppercase tracking-wider font-extrabold bg-amber-400 text-slate-950 px-3 py-1 rounded-full shadow-sm flex items-center gap-1.5">
+                🏛️ {locale === "hi" ? "पंचायती राज मंत्रालय • भारत सरकार" : "Ministry of Panchayati Raj • Govt. of India"}
               </span>
-              <span className="text-[10px] sm:text-xs font-bold bg-white/15 backdrop-blur-md text-emerald-200 px-3 py-1 rounded-full border border-white/20">
-                15th FC & SFC Live Grants
+              <span className="text-[10px] sm:text-xs font-bold bg-slate-800 text-emerald-300 px-3 py-1 rounded-full border border-slate-700">
+                e-GramSwaraj MIS • 15th FC Grants
               </span>
             </div>
 
@@ -279,7 +289,7 @@ export default function VillageDevelopmentPage() {
             </h2>
           </div>
           <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200 w-fit">
-            📍 {selectedVillage}, {selectedBlock} ({selectedDistrict})
+            📍 {locale === "hi" ? selectedVillage : toEnglishPlaceName(selectedVillage)}, {locale === "hi" ? selectedBlock : toEnglishPlaceName(selectedBlock)} ({locale === "hi" ? selectedDistrict : toEnglishPlaceName(selectedDistrict)})
           </span>
         </div>
 
@@ -348,7 +358,7 @@ export default function VillageDevelopmentPage() {
             >
               {blockOptions.map((b) => (
                 <option key={b} value={b}>
-                  {b}
+                  {locale === "hi" ? b : toEnglishPlaceName(b)}
                 </option>
               ))}
             </select>
@@ -366,7 +376,7 @@ export default function VillageDevelopmentPage() {
             >
               {villageOptions.map((v) => (
                 <option key={v} value={v}>
-                  🏡 {v}
+                  🏡 {locale === "hi" ? v : toEnglishPlaceName(v)}
                 </option>
               ))}
             </select>
@@ -459,11 +469,11 @@ export default function VillageDevelopmentPage() {
               </span>
             </div>
             <div className="text-xs text-slate-600 flex items-center gap-2 flex-wrap">
-              <span>सचिव: <strong>{signatories.sachiv_name}</strong></span>
+              <span>{locale === "hi" ? "सचिव: " : "Secretary: "}<strong>{signatories.sachiv_name}</strong></span>
               <span>•</span>
-              <span>BDO: <strong>{signatories.bdo_name}</strong></span>
+              <span>{locale === "hi" ? "BDO: " : "BDO: "}<strong>{signatories.bdo_name}</strong></span>
               <span>•</span>
-              <span className="text-slate-500">JE: {signatories.je_name}</span>
+              <span className="text-slate-500">{locale === "hi" ? "अवर अभियंता: " : "JE: "}{signatories.je_name}</span>
             </div>
             <div className="text-[11px] text-slate-500 flex items-center gap-1.5 pt-0.5">
               <span>🏛️ {signatories.panchayat_bhawan}</span>
@@ -484,6 +494,43 @@ export default function VillageDevelopmentPage() {
             <span>{locale === "hi" ? "सत्यापित ग्राम पंचायत" : "Verified Panchayat"}</span>
           </div>
         </div>
+      </div>
+
+      {/* 4.5 Dedicated ISRO Bhuvan Satellite Inspection Banner */}
+      <div className="bg-gradient-to-r from-slate-950 via-indigo-950 to-slate-900 rounded-2xl p-4 sm:p-5 border-2 border-cyan-500/40 text-white shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-tr from-cyan-500 via-teal-500 to-emerald-400 text-slate-950 flex items-center justify-center font-black text-lg shadow-md shrink-0">
+            🛰️
+          </div>
+          <div>
+            <div className="text-[10px] font-black uppercase tracking-wider text-cyan-300 flex items-center gap-1.5">
+              <span>ISRO BHUVAN • 360° SATELLITE RADAR</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            </div>
+            <h3 className="text-sm sm:text-base font-black text-white mt-0.5">
+              {locale === "hi"
+                ? `${selectedVillage} के निर्माण कार्यों का लाइव उपग्रह व AI सत्यापन`
+                : `Live Satellite & AI Civil Verification: ${toEnglishPlaceName(selectedVillage)}`}
+            </h3>
+            <p className="text-[11px] text-slate-300">
+              {locale === "hi"
+                ? "अंतरिक्ष से हाई-रिज़ॉल्यूशन दृश्य, 3-चरणीय फोटो (कार्य पूर्व/बाद) और डिजिटल जूनियर इंजीनियर रिपोर्ट।"
+                : "0.5m High-res GIS view, 3-stage mActionSoft timeline, and AI PWD compliance certificates."}
+            </p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => {
+            if (filteredProjects.length > 0) setSelectedProjectForSatellite(filteredProjects[0]);
+            else if (projects.length > 0) setSelectedProjectForSatellite(projects[0]);
+          }}
+          className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-400 to-emerald-400 hover:from-cyan-300 hover:to-emerald-300 text-slate-950 font-black text-xs shadow-lg transition-all flex items-center justify-center gap-2 self-start sm:self-auto shrink-0 active:scale-95 cursor-pointer"
+        >
+          <Satellite className="w-4 h-4 text-slate-950" />
+          <span>{locale === "hi" ? "उपग्रह व 3-चरणीय फोटो देखें →" : "View Satellite & 3-Stage Proof →"}</span>
+        </button>
       </div>
 
       {/* 5. Filter Tabs and Search Bar */}
@@ -691,28 +738,39 @@ export default function VillageDevelopmentPage() {
                     </div>
                   </div>
 
-                  {/* Actions: Raise Grievance / Audit and View Official Order */}
-                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                  {/* Actions: Satellite Audit, Raise Grievance & View Sanction Order */}
+                  <div className="pt-3 border-t border-slate-100 space-y-2">
                     <button
                       type="button"
-                      onClick={() => {
-                        setSelectedProjectForGrievance(proj);
-                        setGrievanceSuccess(null);
-                      }}
-                      className="flex-1 py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-rose-50 hover:text-rose-700 text-slate-700 font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
+                      onClick={() => setSelectedProjectForSatellite(proj)}
+                      className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 hover:from-indigo-900 hover:to-slate-900 text-white font-black text-xs transition-all shadow-sm flex items-center justify-center gap-2 border border-indigo-500/40 group active:scale-[0.98]"
                     >
-                      <AlertTriangle className="w-3.5 h-3.5 text-rose-600" />
-                      <span>{locale === "hi" ? "शिकायत / देरी रिपोर्ट करें" : "Report Delay / Issue"}</span>
+                      <Satellite className="w-3.5 h-3.5 text-cyan-400 group-hover:rotate-45 transition-transform" />
+                      <span>{locale === "hi" ? "🛰️ उपग्रह व AI फोटो प्रमाण" : "🛰️ Satellite & AI Photo Proof"}</span>
                     </button>
 
-                    <button
-                      type="button"
-                      onClick={() => setSelectedProjectForDoc(proj)}
-                      className="py-2.5 px-4 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs transition-colors shadow-xs flex items-center gap-1.5 shrink-0"
-                    >
-                      <FileCheck className="w-3.5 h-3.5" />
-                      <span>{locale === "hi" ? "स्वीकृति पत्र" : "Sanction Order"}</span>
-                    </button>
+                    <div className="flex items-center justify-between gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedProjectForGrievance(proj);
+                          setGrievanceSuccess(null);
+                        }}
+                        className="flex-1 py-2 px-3 rounded-xl bg-slate-100 hover:bg-rose-50 hover:text-rose-700 text-slate-700 font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
+                      >
+                        <AlertTriangle className="w-3.5 h-3.5 text-rose-600" />
+                        <span>{locale === "hi" ? "शिकायत दर्ज करें" : "Report Issue"}</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setSelectedProjectForDoc(proj)}
+                        className="py-2 px-3.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs transition-colors shadow-xs flex items-center gap-1.5 shrink-0"
+                      >
+                        <FileCheck className="w-3.5 h-3.5" />
+                        <span>{locale === "hi" ? "स्वीकृति पत्र" : "Sanction"}</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
               );
@@ -892,35 +950,37 @@ export default function VillageDevelopmentPage() {
             {/* Document Content Details */}
             <div className="space-y-3 text-xs sm:text-sm text-slate-800 leading-relaxed">
               <p>
-                <strong>विषय:</strong> {selectedProjectForDoc.title_hi}
+                <strong>{locale === "hi" ? "विषय: " : "Subject: "}</strong> {locale === "hi" ? selectedProjectForDoc.title_hi : selectedProjectForDoc.title_en}
               </p>
               <p>
-                ग्राम सभा <strong>{selectedProjectForDoc.village}</strong> द्वारा पारित प्रस्ताव एवं अवर अभियंता RES की तकनीकी आगणन आख्या के आधार पर निम्नलिखित वित्तीय स्वीकृति प्रदान की जाती है:
+                {locale === "hi"
+                  ? `ग्राम सभा ${selectedProjectForDoc.village} द्वारा पारित प्रस्ताव एवं अवर अभियंता RES की तकनीकी आगणन आख्या के आधार पर निम्नलिखित वित्तीय स्वीकृति प्रदान की जाती है:`
+                  : `In accordance with the resolution passed by Gram Sabha ${selectedProjectForDoc.village} and the technical appraisal report submitted by the Junior Engineer (RES), administrative & financial sanction is accorded as follows:`}
               </p>
 
               <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2 text-xs">
                 <div className="flex justify-between py-1 border-b border-slate-200">
-                  <span className="text-slate-500">योजना एवं निधि स्रोत:</span>
-                  <span className="font-bold">{selectedProjectForDoc.scheme_fund_hi}</span>
+                  <span className="text-slate-500">{locale === "hi" ? "योजना एवं निधि स्रोत:" : "Scheme & Grant Head:"}</span>
+                  <span className="font-bold">{locale === "hi" ? selectedProjectForDoc.scheme_fund_hi : selectedProjectForDoc.scheme_fund_en}</span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-slate-200">
-                  <span className="text-slate-500">कुल स्वीकृत धनराशि:</span>
+                  <span className="text-slate-500">{locale === "hi" ? "कुल स्वीकृत धनराशि:" : "Total Sanctioned Budget:"}</span>
                   <span className="font-bold text-emerald-800">₹{selectedProjectForDoc.sanctioned_amount.toLocaleString("en-IN")}</span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-slate-200">
-                  <span className="text-slate-500">जारी (विमुक्त) प्रथम/द्वितीय किश्त:</span>
+                  <span className="text-slate-500">{locale === "hi" ? "जारी (विमुक्त) प्रथम/द्वितीय किश्त:" : "Disbursed Installment(s):"}</span>
                   <span className="font-bold">₹{selectedProjectForDoc.disbursed_amount.toLocaleString("en-IN")}</span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-slate-200">
-                  <span className="text-slate-500">स्वीकृति दिनांक:</span>
+                  <span className="text-slate-500">{locale === "hi" ? "स्वीकृति दिनांक:" : "Sanction Date:"}</span>
                   <span className="font-bold">{selectedProjectForDoc.sanction_date}</span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-slate-200">
-                  <span className="text-slate-500">प्रत्याशित पूर्णता तिथि:</span>
+                  <span className="text-slate-500">{locale === "hi" ? "प्रत्याशित पूर्णता तिथि:" : "Target Completion Date:"}</span>
                   <span className="font-bold">{selectedProjectForDoc.expected_completion}</span>
                 </div>
                 <div className="flex justify-between py-1">
-                  <span className="text-slate-500">कार्यदायी संस्था / ठेकेदार:</span>
+                  <span className="text-slate-500">{locale === "hi" ? "कार्यदायी संस्था / ठेकेदार:" : "Executing Agency / Contractor:"}</span>
                   <span className="font-bold">{selectedProjectForDoc.contractor_name}</span>
                 </div>
               </div>
@@ -940,18 +1000,28 @@ export default function VillageDevelopmentPage() {
 
             <div className="pt-2 flex items-center justify-between">
               <span className="text-[11px] text-slate-500 italic">
-                ✓ डिजिटल प्रमाणित प्रतिलिपि (e-GramSwaraj पोर्टल से सत्यापित)
+                {locale === "hi"
+                  ? "✓ डिजिटल प्रमाणित प्रतिलिपि (e-GramSwaraj पोर्टल से सत्यापित)"
+                  : "✓ Digitally Certified Copy (e-GramSwaraj & PFMS Verified)"}
               </span>
               <button
                 type="button"
                 onClick={() => setSelectedProjectForDoc(null)}
-                className="px-5 py-2 rounded-xl bg-slate-900 text-white font-bold text-xs"
+                className="px-5 py-2 rounded-xl bg-slate-900 text-white font-bold text-xs cursor-pointer hover:bg-slate-800"
               >
                 {locale === "hi" ? "वापस जाएं" : "Done"}
               </button>
             </div>
           </div>
         </div>
+      )}
+
+      {/* 8. ISRO Bhuvan Satellite & AI Geo-Audit 360 Modal */}
+      {selectedProjectForSatellite && (
+        <SatelliteAuditModal
+          project={selectedProjectForSatellite}
+          onClose={() => setSelectedProjectForSatellite(null)}
+        />
       )}
 
     </div>

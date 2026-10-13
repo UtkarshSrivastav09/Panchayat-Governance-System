@@ -7,7 +7,7 @@
     "dev:fast": "next dev --disable-source-maps",
     "dev:turbo": "next dev --turbopack",
     "build": "next build",
-    "start": "next build && next start",
+    "start": "next start",
     "lint": "next lint",
     "seed": "tsx scripts/seed-demo.ts"
   },

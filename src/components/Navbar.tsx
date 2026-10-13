@@ -17,6 +17,7 @@ import {
   User,
   Award,
   Building2,
+  Satellite,
 } from "lucide-react";
 
 export default function Navbar() {
@@ -28,6 +29,27 @@ export default function Navbar() {
   useEffect(() => {
     const session = getUserSession();
     setCurrentUser(session);
+
+    const handleLocationUpdate = (e: Event) => {
+      const customEvent = e as CustomEvent<any>;
+      if (customEvent.detail) {
+        setCurrentUser((prev) =>
+          prev
+            ? {
+                ...prev,
+                village: customEvent.detail.village,
+                district: customEvent.detail.district,
+                state: customEvent.detail.state,
+              }
+            : null
+        );
+      }
+    };
+
+    window.addEventListener("gramsetu-location-updated", handleLocationUpdate);
+    return () => {
+      window.removeEventListener("gramsetu-location-updated", handleLocationUpdate);
+    };
   }, [pathname]);
 
   const handleLogout = () => {
@@ -138,6 +160,19 @@ export default function Navbar() {
 
           {/* Right: Actions (Roadmap Button, Language Switcher, User Profile & Log Out) */}
           <div className="flex items-center gap-1 sm:gap-1.5 shrink-0 ml-auto">
+            {/* Dedicated ISRO Bhuvan Satellite & AI Geo-Audit Button */}
+            {!isAuthPage && (
+              <Link
+                href="/village-development?audit=live"
+                prefetch={true}
+                className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-1 rounded-lg text-[11px] font-black transition-all shadow-xs active:scale-95 group shrink-0 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-cyan-300 hover:text-white border border-indigo-400/50 hover:border-cyan-400"
+                title={locale === "hi" ? "उपग्रह व AI निर्माण ऑडिट" : "Satellite & AI Geo-Audit"}
+              >
+                <Satellite className="w-3.5 h-3.5 text-cyan-400 animate-pulse shrink-0" />
+                <span className="hidden sm:inline whitespace-nowrap font-black">{locale === "hi" ? "सैटेलाइट ऑडिट" : "Satellite Audit"}</span>
+              </Link>
+            )}
+
             {/* Dedicated Roadmap Button - Icon-only on mobile, icon+text on tablet/desktop */}
             {!isAuthPage && (
               <Link

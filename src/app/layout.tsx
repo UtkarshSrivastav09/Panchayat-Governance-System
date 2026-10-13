@@ -3,6 +3,7 @@ import "./globals.css";
 import { I18nProvider } from "@/lib/i18n";
 import Navbar from "@/components/Navbar";
 import SarpanchCopilot from "@/components/SarpanchCopilot";
+import LocationPromptModal from "@/components/LocationPromptModal";
 
 export const metadata: Metadata = {
   title: "GramSetu (ग्रामसेतु) - Smart Panchayat Governance System",
@@ -43,6 +44,8 @@ export default function RootLayout({
             <main className="flex-1 w-full max-w-full min-w-0 pb-24 xl:pb-10 overflow-x-hidden">{children}</main>
             {/* Floating Sarpanch AI Voice Copilot */}
             <SarpanchCopilot />
+            {/* Automatic Geolocation Permission & Real Village Detector */}
+            <LocationPromptModal />
           </div>
         </I18nProvider>
       </body>
